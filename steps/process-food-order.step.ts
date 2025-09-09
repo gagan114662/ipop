@@ -7,46 +7,38 @@ export const config: EventConfig = {
   name: 'ProcessFoodOrder',
   description: 'basic-tutorial event step, demonstrates how to consume an event from a topic and persist data in state',
   flows: ['basic-tutorial'],
-  subscribes: ['ts.pet.created'],
-  emits: ['ts.order.processed'],
+  subscribes: ['process-food-order'],
+  emits: ['notification'],
   input: z.object({
-    id: z.number(),
-    name: z.string(),
-    photoUrl: z.string(),
-    foodOrder: z.object({
-      id: z.string(),
-      quantity: z.number(),
-    }).optional(),
     email: z.string(),
+    quantity: z.number(),
+    petId: z.number(),
   }),
 }
 
 export const handler: Handlers['ProcessFoodOrder'] = async (input, { traceId, logger, state, emit }) => {
-  logger.info('🟦 TypeScript Step: Processing food order', { input, traceId })
+  logger.info('Step 02 – Process food order', { input, traceId })
 
-  if (input.foodOrder) {
-    const order = await petStoreService.createOrder({
+  const order = await petStoreService.createOrder({
+    ...input,
+    shipDate: new Date().toISOString(),
+    status: 'placed',
+  })
+
+  await state.set('orders', order.id, order)
+
+  await emit({
+    topic: 'notification',
+    data: {
       email: input.email,
-      quantity: input.foodOrder.quantity,
-      petId: input.id,
-      shipDate: new Date().toISOString(),
-      status: 'placed',
-    })
-
-    await state.set('ts-orders', order.id, order)
-
-    await emit({
-      topic: 'ts.order.processed',
-      data: {
-        email: input.email,
-        templateId: 'ts-order-confirmation',
-        order: order,
-        pet: { id: input.id, name: input.name },
+      templateId: 'new-order',
+      templateData: {
+        status: order.status,
+        shipDate: order.shipDate,
+        id: order.id,
+        petId: order.petId,
+        quantity: order.quantity,
       },
-    })
-
-    return { order_processed: true, order_id: order.id }
-  }
-  
-  return { order_processed: false, reason: 'no_food_order' }
+    },
+  })
 }

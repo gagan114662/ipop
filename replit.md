@@ -16,11 +16,11 @@ A complete Replit template for the Motia Backend Framework that provides develop
 - Developer-focused interface with clear documentation sections
 
 ## Project Architecture
-- **Framework**: Motia (unified backend framework) 
-- **Languages**: Multi-language support (TypeScript, Python, JavaScript, Ruby)
-- **Structure**: Polyglot step-based architecture with cross-language event communication
-- **Development Server**: Runs on port 5000 with live reload and multi-language support
-- **Workbench**: Visual interface for debugging and monitoring workflows across all languages
+- **Framework**: Motia (unified backend framework)
+- **Language**: TypeScript with Node.js
+- **Structure**: Step-based architecture with APIs, events, and cron jobs
+- **Development Server**: Runs on port 5000 with live reload
+- **Workbench**: Visual interface for debugging and monitoring
 
 ## Core Features
 - Complete Motia framework installation and configuration
@@ -30,10 +30,9 @@ A complete Replit template for the Motia Backend Framework that provides develop
 - Example workflow demonstrating pet store operations
 
 ## Template Contents
-- **TypeScript Steps**: API endpoints, event processing, cron jobs, notifications
-- **Python Step**: AI sentiment analysis showcasing ML capabilities
-- **JavaScript Step**: Pet recommendation engine with data manipulation
-- **Ruby Step**: Email notification service with elegant templating
-- **Cross-language Events**: Seamless communication between different language steps
-- **Shared State**: Data persistence accessible across all languages
-- **Complete documentation**: Multi-language workflow examples and best practices
+- API step for handling HTTP requests
+- Event steps for background processing
+- Cron step for scheduled tasks
+- Notification system
+- State management examples
+- Complete documentation for developers

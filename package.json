@@ -21,6 +21,7 @@
   "author": "Motia Template",
   "license": "MIT",
   "dependencies": {
+    "motia": "latest",
     "zod": "^3.23.8"
   },
   "devDependencies": {

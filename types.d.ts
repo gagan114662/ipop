@@ -12,13 +12,9 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'StateAuditJob': CronHandler<never>
-    'ProcessFoodOrder': EventHandler<{ id: number; name: string; photoUrl: string; foodOrder?: { id: string; quantity: number }; email: string }, { topic: 'ts.order.processed'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
+    'StateAuditJob': CronHandler<{ topic: 'notification'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
+    'ProcessFoodOrder': EventHandler<{ email: string; quantity: number; petId: number }, { topic: 'notification'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
     'Notification': EventHandler<{ templateId: string; email: string; templateData: Record<string, unknown> }, never>
-    'ApiTrigger': ApiRouteHandler<{ pet: { name: string; photoUrl: string }; foodOrder?: { id: string; quantity: number } }, ApiResponse<200, { id: number; name: string; photoUrl: string; status?: 'available' | 'pending' | 'sold'; createdAt?: string }>, { topic: 'ts.pet.created'; data: { id: number; name: string; photoUrl: string; foodOrder?: { id: string; quantity: number }; email: string } }>
-    'PythonWorkflowTrigger': ApiRouteHandler<{ pet: { id: number; name: string; description?: string } }, ApiResponse<200, { message: string; workflow: string; pet_id: number }>, never>
-    'JavaScriptWorkflowTrigger': ApiRouteHandler<{ pet: { id: number; name: string; age?: number; breed?: string }; preferences?: { budget?: 'low' | 'medium' | 'high'; activity_level?: 'low' | 'moderate' | 'high' } }, ApiResponse<200, { message: string; workflow: string; pet_id: number }>, never>
-    'RubyWorkflowTrigger': ApiRouteHandler<{ pet: { name: string; owner_email: string }; notification_type?: 'welcome' | 'reminder' | 'update'; custom_message?: string }, ApiResponse<200, { message: string; workflow: string; pet_name: string }>, never>
-    'CrossLanguageWorkflow': ApiRouteHandler<{ pet: { id: number; name: string; description: string; owner_email: string } }, ApiResponse<200, { message: string; workflow: string; steps: string[] }>, never>
+    'ApiTrigger': ApiRouteHandler<{ pet: { name: string; photoUrl: string }; foodOrder?: { id: string; quantity: number } }, ApiResponse<200, { id: number; name: string; photoUrl: string; status?: 'available' | 'pending' | 'sold'; createdAt?: string }>, { topic: 'process-food-order'; data: { email: string; quantity: number; petId: number } }>
   }
 }

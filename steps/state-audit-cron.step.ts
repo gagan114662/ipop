@@ -5,7 +5,7 @@ export const config: CronConfig = {
   cron: '*/5 * * * *', // run every 5 minutes
   name: 'StateAuditJob',
   description: 'Checks the state for orders that are not complete and have a ship date in the past',
-  emits: ['ts.audit.warning'],
+  emits: ['notification'],
   flows: ['basic-tutorial'],
 }
 
@@ -19,8 +19,7 @@ type Order = {
 }
 
 export const handler: Handlers['StateAuditJob'] = async ({ logger, state, emit }) => {
-  logger.info('🟦 TypeScript Cron: Running state audit job')
-  const stateValue = await state.getGroup<Order>('ts-orders')
+  const stateValue = await state.getGroup<Order>('orders')
 
   for (const item of stateValue) {
     // check if current date is after item.shipDate
@@ -35,15 +34,15 @@ export const handler: Handlers['StateAuditJob'] = async ({ logger, state, emit }
       })
 
       await emit({
-        topic: 'ts.audit.warning',
+        topic: 'notification',
         data: {
           email: 'test@test.com',
-          templateId: 'ts-audit-warning',
+          templateId: 'order-audit-warning',
           templateData: {
             orderId: item.id,
             status: item.status,
             shipDate: item.shipDate,
-            message: 'TypeScript audit: Order is not complete and ship date is past',
+            message: 'Order is not complete and ship date is past',
           },
         },
       })
