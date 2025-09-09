@@ -1,0 +1,34 @@
+{
+  "name": "motia-template",
+  "version": "1.0.0",
+  "description": "A Replit template for the Motia framework - complete development environment with sample project structure",
+  "main": "index.js",
+  "scripts": {
+    "dev": "motia dev",
+    "start": "motia start",
+    "build": "motia build",
+    "test": "motia test"
+  },
+  "keywords": [
+    "motia",
+    "backend",
+    "api",
+    "workflow",
+    "typescript",
+    "framework",
+    "template"
+  ],
+  "author": "Motia Template",
+  "license": "MIT",
+  "dependencies": {
+    "motia": "latest",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
