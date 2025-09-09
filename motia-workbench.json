@@ -19,5 +19,41 @@
         "y": 161
       }
     }
+  },
+  {
+    "id": "cross-language-demo",
+    "config": {
+      "steps/cross-language-api.step.ts": {
+        "x": -18,
+        "y": -7
+      }
+    }
+  },
+  {
+    "id": "ruby-workflow",
+    "config": {
+      "steps/ruby-api.step.ts": {
+        "x": -12,
+        "y": 4
+      }
+    }
+  },
+  {
+    "id": "javascript-workflow",
+    "config": {
+      "steps/javascript-api.step.ts": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  {
+    "id": "python-workflow",
+    "config": {
+      "steps/python-api.step.ts": {
+        "x": 0,
+        "y": 0
+      }
+    }
   }
 ]
