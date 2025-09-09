@@ -8,7 +8,7 @@ This template comes pre-configured with everything you need to start building wi
 
 ### What's Included
 
-- ✅ **Complete Motia framework setup** with TypeScript support
+- ✅ **Complete Motia framework setup** with TypeScript, Javascript, Python support
 - ✅ **Example workflow** demonstrating APIs, events, and cron jobs
 - ✅ **Pre-configured development environment** ready to use
 - ✅ **Sample project structure** with best practices
