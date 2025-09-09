@@ -4,7 +4,7 @@
   "description": "A Replit template for the Motia framework - complete development environment with sample project structure",
   "main": "index.js",
   "scripts": {
-    "dev": "motia dev",
+    "dev": "motia dev --port 5000 --host 0.0.0.0",
     "start": "motia start",
     "build": "motia build",
     "test": "motia test"
