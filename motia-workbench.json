@@ -1,0 +1,23 @@
+[
+  {
+    "id": "basic-tutorial",
+    "config": {
+      "steps/state-audit-cron.step.ts": {
+        "x": 361,
+        "y": 67
+      },
+      "steps/process-food-order.step.ts": {
+        "x": 356,
+        "y": 338
+      },
+      "steps/notification.step.ts": {
+        "x": 892,
+        "y": 219
+      },
+      "steps/api.step.ts": {
+        "x": 6,
+        "y": 161
+      }
+    }
+  }
+]
