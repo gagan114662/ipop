@@ -26,23 +26,37 @@ This template comes pre-configured with everything you need to start building wi
 
 ```
 motia-template/
-├── steps/                           # Motia step definitions
-│   ├── api.step.ts                 # 🟦 TypeScript API endpoint
-│   ├── notification.step.ts        # 🟦 TypeScript notifications  
-│   ├── process-food-order.step.ts  # 🟦 TypeScript event processing
-│   ├── state-audit-cron.step.ts    # 🟦 TypeScript scheduled jobs
+├── steps/                                    # Motia step definitions
+│   ├── # TypeScript Workflow (ts.* events)
+│   ├── api.step.ts                          # 🟦 Main API endpoint  
+│   ├── process-food-order.step.ts           # 🟦 Order processing
+│   ├── notification.step.ts                 # 🟦 Notifications
+│   ├── state-audit-cron.step.ts             # 🟦 Scheduled audits
+│   │
+│   ├── # Separate Language Workflows  
+│   ├── python-api.step.ts                   # 🟦→🐍 Python workflow trigger
+│   ├── javascript-api.step.ts               # 🟦→🟡 JavaScript workflow trigger  
+│   ├── ruby-api.step.ts                     # 🟦→💎 Ruby workflow trigger
+│   │
+│   ├── # Language-Specific Steps
 │   ├── python/
-│   │   └── ai-sentiment-analyzer.step.py    # 🐍 Python AI/ML processing
+│   │   └── ai-sentiment-analyzer.step.py   # 🐍 AI/ML processing (py.* events)
 │   ├── javascript/
-│   │   └── pet-recommendation-engine.step.js # 🟡 JavaScript data manipulation
-│   └── ruby/
-│       └── email-notification-service.step.rb # 💎 Ruby background processing
-├── services/                        # Business logic and services
-│   ├── pet-store.ts                # TypeScript service layer
-│   └── types.ts                    # Shared type definitions
-├── config/                          # Configuration files
-├── package.json                     # Dependencies and scripts
-└── tsconfig.json                   # TypeScript configuration
+│   │   └── pet-recommendation-engine.step.js # 🟡 Data manipulation (js.* events)
+│   ├── ruby/
+│   │   └── email-notification-service.step.rb # 💎 Background processing (rb.* events)
+│   │
+│   ├── # Cross-Language Workflow Example
+│   ├── cross-language-api.step.ts           # 🌍 Multi-language trigger
+│   ├── cross-language-python.step.py        # 🐍 Cross-language AI step
+│   ├── cross-language-javascript.step.js    # 🟡 Cross-language recommendations
+│   └── cross-language-ruby.step.rb          # 💎 Cross-language notifications
+├── services/                                 # Business logic and services
+│   ├── pet-store.ts                         # TypeScript service layer
+│   └── types.ts                             # Shared type definitions
+├── config/                                   # Configuration files
+├── package.json                              # Dependencies and scripts  
+└── tsconfig.json                            # TypeScript configuration
 ```
 
 ## 🔨 Available Commands
@@ -87,34 +101,77 @@ export const config: CronConfig = {
 }
 ```
 
-## 🔄 Polyglot Workflow Example
+## 🔄 **Workflow Patterns: Separate vs Cross-Language**
 
-This template showcases a **multi-language pet store workflow** that demonstrates how different languages excel at different tasks:
+This template demonstrates **two important workflow patterns** that solve the common problem of event collision between languages:
 
-### 🌟 **Complete Workflow Chain**
-1. **🟦 TypeScript API** → Creates pet records and triggers events
-2. **🐍 Python AI Step** → Analyzes pet sentiment using AI/ML capabilities  
-3. **🟡 JavaScript Engine** → Generates personalized recommendations
-4. **💎 Ruby Service** → Sends beautifully formatted email notifications
-5. **🟦 TypeScript Cron** → Audits and monitors system health
+### 🎯 **Pattern 1: Separate Language Workflows (Recommended)**
 
-### 🔗 **Event-Driven Connections**
+Each language has its **own independent workflow** using language-prefixed events:
+
 ```
-API (TypeScript) 
-    ↓ emits: pet.created
-Python AI Analyzer
-    ↓ emits: sentiment.analyzed  
-JavaScript Recommender
-    ↓ emits: recommendations.generated
-Ruby Email Service
-    ↓ emits: email.sent
+🟦 TypeScript Workflow:
+POST /basic-tutorial → ts.pet.created → ts.order.processed → ts.notification
+
+🐍 Python Workflow:  
+POST /python/analyze-pet → py.pet.analyze → py.sentiment.analyzed
+
+🟡 JavaScript Workflow:
+POST /javascript/recommend → js.pet.recommend → js.recommendations.generated
+
+💎 Ruby Workflow:
+POST /ruby/send-notification → rb.send.email → rb.email.sent
 ```
 
-**Why Each Language?**
-- **Python**: Perfect for AI/ML libraries (transformers, scikit-learn, tensorflow)
-- **JavaScript**: Excellent for rapid data manipulation and business logic
-- **Ruby**: Elegant syntax for background processing and integrations
-- **TypeScript**: Strong typing for APIs and system reliability
+**✅ Benefits:**
+- **No event collision** - each language workflow runs independently
+- **Cleaner logs** - only relevant steps are triggered
+- **Easy debugging** - clear separation of concerns
+- **Scalable** - each workflow can scale independently
+
+### 🌍 **Pattern 2: Intentional Cross-Language Communication**
+
+When you **want** languages to work together, use the `cross.` prefix:
+
+```
+🌍 Cross-Language Pipeline:
+POST /cross-language/full-pipeline 
+  ↓ cross.python.analyze
+🐍 Python AI Analysis
+  ↓ cross.analysis.complete  
+🟡 JavaScript Recommendations
+  ↓ cross.recommendations.ready
+💎 Ruby Email Service
+  ↓ cross.workflow.complete
+```
+
+**✅ Benefits:**
+- **Intentional communication** - explicitly designed for cross-language workflows
+- **Language-specific strengths** - each step uses the best language for its task  
+- **Shared state** - data flows seamlessly between languages
+- **Full observability** - trace the complete multi-language journey
+
+### 🎛️ **Event Naming Convention**
+
+| Pattern | Event Format | Example | Use Case |
+|---------|-------------|---------|----------|
+| **Separate** | `{lang}.{domain}.{action}` | `py.pet.analyze` | Independent workflows |
+| **Cross-Language** | `cross.{step}.{action}` | `cross.analysis.complete` | Multi-language pipelines |
+| **TypeScript** | `ts.{domain}.{action}` | `ts.order.processed` | TypeScript-specific workflow |
+
+### 🚀 **Quick Test**
+
+Try these endpoints to see the different patterns:
+
+```bash
+# Separate Workflows (won't interfere with each other)
+curl -X POST /python/analyze-pet -d '{"pet":{"id":1,"name":"Buddy"}}'
+curl -X POST /javascript/recommend -d '{"pet":{"id":2,"name":"Luna"}}'  
+curl -X POST /ruby/send-notification -d '{"pet":{"name":"Max","owner_email":"owner@example.com"}}'
+
+# Cross-Language Pipeline (all languages work together)
+curl -X POST /cross-language/full-pipeline -d '{"pet":{"id":3,"name":"Charlie","description":"Happy dog","owner_email":"owner@example.com"}}'
+```
 
 ## 🛠️ Development Workflow
 
@@ -172,12 +229,37 @@ The Motia workbench provides:
 - **🟦 TypeScript** → Type-safe APIs, business logic, system reliability
 - **💎 Ruby** → Beautiful code, rapid development, elegant integrations
 
-## 💡 Tips
+## 💡 **Best Practices**
 
-- Use the workbench to visualize your workflow before coding
-- Start with the example steps and modify them for your use case
-- Check the console logs in the workbench for debugging
-- Experiment with different step types to build complex workflows
+### 🎯 **Choosing Workflow Patterns**
+
+**Use Separate Workflows When:**
+- Building independent features (user management, payments, analytics)
+- Each language workflow serves different business domains  
+- You want to avoid event collision and keep logs clean
+- Different teams work on different language components
+
+**Use Cross-Language Workflows When:**
+- You need the specific strengths of each language in one pipeline
+- Building AI/ML workflows (Python AI → JavaScript API → Ruby notifications)
+- Data processing pipelines that benefit from polyglot processing
+- You want to demonstrate Motia's cross-language capabilities
+
+### 🛠️ **Development Tips**
+
+- **📊 Visual Debugging**: Use the workbench to see workflow separation clearly
+- **🏷️ Event Naming**: Always use language prefixes (`ts.`, `py.`, `js.`, `rb.`, `cross.`)
+- **📝 Clear Logs**: Language prefixes make debugging much easier
+- **🧪 Test Separation**: Try triggering different language workflows simultaneously
+- **🔍 Monitor Warnings**: Motia warns about events with no subscribers - use this to verify separation
+
+### 🚀 **Getting Started**
+
+1. **Start Simple**: Begin with separate language workflows  
+2. **Add Cross-Language**: Once comfortable, experiment with `cross.*` events
+3. **Use the Workbench**: Visualize your workflows before coding
+4. **Check Event Flow**: Ensure events go to intended subscribers only
+5. **Scale Gradually**: Add more languages and complexity as needed
 
 ---
 
