@@ -26,7 +26,7 @@ export const config: ApiRouteConfig = {
   responseSchema: {
     200: petSchema,
   },
-  emits: ['process-food-order'],
+  emits: ['ts.pet.created'],
 }
 
 export const handler: Handlers['ApiTrigger'] = async (req, { logger, traceId, emit }) => {
@@ -37,11 +37,11 @@ export const handler: Handlers['ApiTrigger'] = async (req, { logger, traceId, em
 
   if (foodOrder) {
     await emit({
-      topic: 'process-food-order',
+      topic: 'ts.pet.created',
       data: {
-        ...foodOrder,
+        ...newPetRecord,
+        foodOrder,
         email: 'test@test.com', // sample email
-        petId: newPetRecord.id,
       },
     })
   }

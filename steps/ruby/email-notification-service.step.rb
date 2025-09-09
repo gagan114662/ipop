@@ -8,8 +8,8 @@ Motia.step(
   name: 'EmailNotificationService',
   description: 'Sends beautifully formatted email notifications using Ruby',
   flows: ['basic-tutorial'],
-  subscribes: ['recommendations.generated'],
-  emits: ['email.sent']
+  subscribes: ['rb.send.email'],
+  emits: ['rb.email.sent']
 ) do |event, context|
   
   logger = context[:logger]
@@ -40,7 +40,7 @@ Motia.step(
   logger.info "📧 Email sent successfully for #{pet_name}"
   
   # Emit confirmation
-  emit.call('email.sent', {
+  emit.call('rb.email.sent', {
     pet_name: pet_name,
     email_sent_at: Time.now.iso8601,
     recommendation_count: recommendations.length,

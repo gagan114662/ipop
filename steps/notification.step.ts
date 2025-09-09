@@ -6,7 +6,7 @@ export const config: EventConfig = {
   name: 'Notification',
   description: 'Sends notifications to users',
   flows: ['basic-tutorial'],
-  subscribes: ['notification'],
+  subscribes: ['ts.order.processed'],
   emits: [],
   input: z.object({
     templateId: z.string(),

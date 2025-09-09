@@ -6,8 +6,8 @@ export default motia.step({
   name: 'PetRecommendationEngine',
   description: 'Generates personalized pet recommendations based on sentiment analysis',
   flows: ['basic-tutorial'],
-  subscribes: ['sentiment.analyzed'],
-  emits: ['recommendations.generated']
+  subscribes: ['js.pet.recommend'],
+  emits: ['js.recommendations.generated']
 })
 
 export const handler = async (event, { logger, emit, state }) => {
@@ -34,7 +34,7 @@ export const handler = async (event, { logger, emit, state }) => {
   })
   
   // Emit for notification step
-  await emit('recommendations.generated', {
+  await emit('js.recommendations.generated', {
     pet_id,
     pet_name,
     recommendations: personalizedRecs,

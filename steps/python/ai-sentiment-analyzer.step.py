@@ -7,8 +7,8 @@ from datetime import datetime
     name='AISentimentAnalyzer',
     description='Analyzes pet descriptions using AI to determine sentiment and generate insights',
     flows=['basic-tutorial'],
-    subscribes=['pet.created'],
-    emits=['sentiment.analyzed']
+    subscribes=['py.pet.analyze'],
+    emits=['py.sentiment.analyzed']
 )
 async def analyze_pet_sentiment(event, context):
     """
@@ -67,7 +67,7 @@ async def analyze_pet_sentiment(event, context):
     logger.info(f'🤖 AI Analysis Complete: {sentiment_label} ({sentiment_score:.2f})')
     
     # Emit results for other steps to consume
-    await emit('sentiment.analyzed', {
+    await emit('py.sentiment.analyzed', {
         'pet_id': pet_data.get('id'),
         'pet_name': pet_name,
         'analysis': insights,

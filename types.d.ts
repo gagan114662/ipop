@@ -12,9 +12,9 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'StateAuditJob': CronHandler<{ topic: 'notification'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
-    'ProcessFoodOrder': EventHandler<{ email: string; quantity: number; petId: number }, { topic: 'notification'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
+    'StateAuditJob': CronHandler<never>
+    'ProcessFoodOrder': EventHandler<{ id: number; name: string; photoUrl: string; foodOrder?: { id: string; quantity: number }; email: string }, { topic: 'ts.order.processed'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
     'Notification': EventHandler<{ templateId: string; email: string; templateData: Record<string, unknown> }, never>
-    'ApiTrigger': ApiRouteHandler<{ pet: { name: string; photoUrl: string }; foodOrder?: { id: string; quantity: number } }, ApiResponse<200, { id: number; name: string; photoUrl: string; status?: 'available' | 'pending' | 'sold'; createdAt?: string }>, { topic: 'process-food-order'; data: { email: string; quantity: number; petId: number } }>
+    'ApiTrigger': ApiRouteHandler<{ pet: { name: string; photoUrl: string }; foodOrder?: { id: string; quantity: number } }, ApiResponse<200, { id: number; name: string; photoUrl: string; status?: 'available' | 'pending' | 'sold'; createdAt?: string }>, { topic: 'ts.pet.created'; data: { id: number; name: string; photoUrl: string; foodOrder?: { id: string; quantity: number }; email: string } }>
   }
 }

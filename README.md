@@ -2,33 +2,47 @@
 
 A complete Replit template for the **Motia Backend Framework** - the unified runtime that eliminates backend fragmentation by bringing APIs, background jobs, workflows, and AI agents into one system.
 
+## 🌍 **Polyglot Workflow Showcase**
+
+This template demonstrates Motia's **multi-language capabilities** - write each step in the language that best fits the task:
+- **🟦 TypeScript** - APIs and business logic
+- **🐍 Python** - AI/ML processing and data analysis  
+- **🟡 JavaScript** - Rapid prototyping and data manipulation
+- **💎 Ruby** - Background processing and notifications
+
 ## 🚀 Quick Start
 
 This template comes pre-configured with everything you need to start building with Motia. Just click **Run** and start coding!
 
 ### What's Included
 
-- ✅ **Complete Motia framework setup** with TypeScript support
-- ✅ **Example workflow** demonstrating APIs, events, and cron jobs
-- ✅ **Pre-configured development environment** ready to use
-- ✅ **Sample project structure** with best practices
-- ✅ **Visual workbench** for debugging and monitoring
+- ✅ **Multi-language workflow** with TypeScript, Python, JavaScript & Ruby examples
+- ✅ **Complete Motia framework setup** with polyglot support
+- ✅ **AI/ML capabilities** showcased through Python steps
+- ✅ **Event-driven architecture** connecting steps across languages
+- ✅ **Visual workbench** for debugging and monitoring workflows
 
 ## 🎯 Project Structure
 
 ```
 motia-template/
-├── steps/                    # Motia step definitions
-│   ├── api.step.ts          # API endpoint example
-│   ├── notification.step.ts  # Event handler example
-│   ├── process-food-order.step.ts # Event processing
-│   └── state-audit-cron.step.ts  # Scheduled job example
-├── services/                 # Business logic and services
-│   ├── pet-store.ts         # Sample service
-│   └── types.ts             # Type definitions
-├── config/                   # Configuration files
-├── package.json             # Dependencies and scripts
-└── tsconfig.json           # TypeScript configuration
+├── steps/                           # Motia step definitions
+│   ├── api.step.ts                 # 🟦 TypeScript API endpoint
+│   ├── notification.step.ts        # 🟦 TypeScript notifications  
+│   ├── process-food-order.step.ts  # 🟦 TypeScript event processing
+│   ├── state-audit-cron.step.ts    # 🟦 TypeScript scheduled jobs
+│   ├── python/
+│   │   └── ai-sentiment-analyzer.step.py    # 🐍 Python AI/ML processing
+│   ├── javascript/
+│   │   └── pet-recommendation-engine.step.js # 🟡 JavaScript data manipulation
+│   └── ruby/
+│       └── email-notification-service.step.rb # 💎 Ruby background processing
+├── services/                        # Business logic and services
+│   ├── pet-store.ts                # TypeScript service layer
+│   └── types.ts                    # Shared type definitions
+├── config/                          # Configuration files
+├── package.json                     # Dependencies and scripts
+└── tsconfig.json                   # TypeScript configuration
 ```
 
 ## 🔨 Available Commands
@@ -73,14 +87,34 @@ export const config: CronConfig = {
 }
 ```
 
-## 🔄 Example Workflow
+## 🔄 Polyglot Workflow Example
 
-This template includes a complete pet store workflow:
+This template showcases a **multi-language pet store workflow** that demonstrates how different languages excel at different tasks:
 
-1. **API Call** → Creates a pet and optional food order
-2. **Event Processing** → Processes the food order and saves to state
-3. **Notification** → Sends confirmation notification
-4. **Audit Job** → Periodically checks for overdue orders
+### 🌟 **Complete Workflow Chain**
+1. **🟦 TypeScript API** → Creates pet records and triggers events
+2. **🐍 Python AI Step** → Analyzes pet sentiment using AI/ML capabilities  
+3. **🟡 JavaScript Engine** → Generates personalized recommendations
+4. **💎 Ruby Service** → Sends beautifully formatted email notifications
+5. **🟦 TypeScript Cron** → Audits and monitors system health
+
+### 🔗 **Event-Driven Connections**
+```
+API (TypeScript) 
+    ↓ emits: pet.created
+Python AI Analyzer
+    ↓ emits: sentiment.analyzed  
+JavaScript Recommender
+    ↓ emits: recommendations.generated
+Ruby Email Service
+    ↓ emits: email.sent
+```
+
+**Why Each Language?**
+- **Python**: Perfect for AI/ML libraries (transformers, scikit-learn, tensorflow)
+- **JavaScript**: Excellent for rapid data manipulation and business logic
+- **Ruby**: Elegant syntax for background processing and integrations
+- **TypeScript**: Strong typing for APIs and system reliability
 
 ## 🛠️ Development Workflow
 
@@ -121,12 +155,22 @@ The Motia workbench provides:
 
 ## 🌟 Features Highlights
 
-- **🔄 Event-Driven Architecture**: Connect steps through events
-- **📊 Built-in Observability**: Track everything that happens
-- **🌍 Multi-Language Support**: TypeScript, Python, JavaScript, and more
-- **🤖 AI-Ready**: Perfect for building AI agents and workflows
-- **⚡ Zero Configuration**: Start coding immediately
-- **🔧 Developer Experience**: Rich tooling and debugging
+- **🌍 True Polyglot Support**: Mix Python, JavaScript, TypeScript, Ruby in one workflow
+- **🔄 Event-Driven Architecture**: Connect steps seamlessly across languages
+- **🤖 AI/ML Ready**: Python steps with access to full PyPI ecosystem
+- **📊 Built-in Observability**: Visual workflow tracking across all languages
+- **⚡ Zero Configuration**: All languages pre-configured and ready
+- **🔧 Language-Specific Strengths**: Use each language where it excels most
+
+## 🚀 **Why Multi-Language Matters**
+
+**Traditional Problem**: Forced to choose one language for entire backend
+**Motia Solution**: Use the right language for each specific task
+
+- **🐍 Python** → AI/ML, data science, complex algorithms
+- **🟡 JavaScript** → Fast prototyping, JSON manipulation, modern ecosystem  
+- **🟦 TypeScript** → Type-safe APIs, business logic, system reliability
+- **💎 Ruby** → Beautiful code, rapid development, elegant integrations
 
 ## 💡 Tips
 
