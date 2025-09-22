@@ -1,42 +1,29 @@
-import { Pet, Order } from './types'
+import { Order, Pet } from './types'
 
-export class PetStoreService {
-  private petIdCounter = 1
-  private orderIdCounter = 1
-
-  async createPet(petData: { name: string; photoUrl: string }): Promise<Pet> {
-    const newPet: Pet = {
-      id: this.petIdCounter++,
-      name: petData.name,
-      photoUrl: petData.photoUrl,
-      status: 'available',
-      createdAt: new Date().toISOString(),
-    }
-    
-    console.log(`Created new pet: ${newPet.name} with ID ${newPet.id}`)
-    return newPet
-  }
-
-  async createOrder(orderData: {
-    email: string
-    quantity: number
-    petId: number
-    shipDate: string
-    status: string
-  }): Promise<Order> {
-    const newOrder: Order = {
-      id: this.orderIdCounter++,
-      petId: orderData.petId,
-      quantity: orderData.quantity,
-      shipDate: orderData.shipDate,
-      status: orderData.status,
-      complete: false,
-      email: orderData.email,
-    }
-    
-    console.log(`Created new order: ${newOrder.id} for pet ${newOrder.petId}`)
-    return newOrder
-  }
+export const petStoreService = {
+  createPet: async (pet: Omit<Pet, 'id'>): Promise<Pet> => {
+    const response = await fetch('https://petstore.swagger.io/v2/pet', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: pet?.name ?? '',
+        photoUrls: [pet?.photoUrl ?? ''],
+        status: 'available',
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    return response.json()
+  },
+  createOrder: async (order: Omit<Order, 'id'>): Promise<Order> => {
+    const response = await fetch('https://petstore.swagger.io/v2/store/order', {
+      method: 'POST',
+      body: JSON.stringify({
+        quantity: order?.quantity ?? 1,
+        petId: 1,
+        shipDate: order?.shipDate ?? new Date().toISOString(),
+        status: order?.status ?? 'placed',
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    return response.json()
+  },
 }
-
-export const petStoreService = new PetStoreService()

@@ -46,5 +46,5 @@ export const handler: Handlers['ApiTrigger'] = async (req, { logger, traceId, em
     })
   }
 
-  return { status: 200, body: { ...newPetRecord, traceId } }
+  return { status: 200, body: {...newPetRecord, traceId } }
 }
