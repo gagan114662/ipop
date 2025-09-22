@@ -21,6 +21,12 @@
   "author": "Motia Template",
   "license": "MIT",
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
+    "google-auth-library": "^10.3.0",
+    "googleapis": "^160.0.0",
+    "jsonwebtoken": "^9.0.2",
     "motia": "^0.6.4-beta.130",
     "zod": "^3.23.8"
   },
