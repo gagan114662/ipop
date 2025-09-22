@@ -19,5 +19,22 @@
         "y": 45
       }
     }
+  },
+  {
+    "id": "gmail-auth",
+    "config": {
+      "steps/gmail-auth-init.step.ts": {
+        "x": 18,
+        "y": 0
+      },
+      "steps/gmail-auth-callback.step.ts": {
+        "x": 0,
+        "y": 203
+      },
+      "steps/gmail-verify-token.step.ts": {
+        "x": 1,
+        "y": 426
+      }
+    }
   }
 ]
