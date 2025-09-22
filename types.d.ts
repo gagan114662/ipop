@@ -19,5 +19,6 @@ declare module 'motia' {
     'GmailAuthInit': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { authUrl: string; message: string }> | ApiResponse<500, { error: string }>, never>
     'GmailAuthCallback': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { token: string; user: { id: string; email: string; name: string; picture?: string }; message: string }> | ApiResponse<400, { error: string }> | ApiResponse<500, { error: string }>, never>
     'VerifyGmailToken': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { user: { userId: string; email: string; name: string; picture?: string }; valid: boolean }> | ApiResponse<401, { error: string; valid: boolean }> | ApiResponse<500, { error: string }>, never>
+    'ProtectedGmailExample': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { user: { userId: string; email: string; name: string; picture?: string }; gmailInfo: { labels: { id: string; name: string }[]; profile: { emailAddress: string; messagesTotal: number; threadsTotal: number } }; message: string }> | ApiResponse<401, { error: string; code: string }> | ApiResponse<500, { error: string }>, never>
   }
 }
