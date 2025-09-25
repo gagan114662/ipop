@@ -32,22 +32,41 @@ Motia seamlessly combines JavaScript, TypeScript, Python, and Ruby in a single e
 - Run tests: `pnpm test`
 - Build project: `pnpm build`
 
-## Architecture & Code Style
+## Agents Folder Structure
 
-### File Structure
-```
-steps/                     # All workflow logic goes here
-├── auth/                  # Authentication workflows
-├── users/                 # User management
-├── api/                   # API endpoints
-├── events/                # Event processing
-├── cron/                  # Scheduled tasks
-├── streams/               # Real-time data streams
-└── integrations/          # External service integrations
+The `agents/` folder contains the proper Motia documentation structure and development rules:
 
-types/                     # Shared TypeScript types
-config.yml                 # Motia configuration
-```
+### Documentation Structure
+- **`agents/index.mdc`** - Main index file referencing all development guides
+- **`agents/architecture/`** - Database and system architecture documentation
+  - `database/database.mdc` - Database integration patterns
+  - `database/database-migration.mdc` - Migration procedures
+  - `architecture.mdc` - System architecture guidelines
+  - `error-handling.mdc` - Error handling patterns
+- **`agents/rules/motia/`** - Step-specific development rules
+  - `api-steps.mdc` - HTTP endpoint creation guide
+  - `event-steps.mdc` - Event-driven processing patterns
+  - `cron-steps.mdc` - Scheduled task implementation
+  - `ui-steps.mdc` - User interface step patterns
+  - `virtual-steps.mdc` - Virtual step documentation
+  - `middlewares.mdc` - Middleware implementation patterns
+  - `realtime-streaming.mdc` - Real-time feature implementation
+  - `state-management.mdc` - State and caching patterns
+
+### Using the Agents Folder
+
+When developing with Motia, always reference the appropriate `.mdc` files in the agents folder:
+
+1. **For API Development**: Use `agents/rules/motia/api-steps.mdc` for HTTP endpoint patterns
+2. **For Event Processing**: Use `agents/rules/motia/event-steps.mdc` for event-driven workflows
+3. **For Background Jobs**: Use `agents/rules/motia/cron-steps.mdc` for scheduled tasks
+4. **For Real-time Features**: Use `agents/rules/motia/realtime-streaming.mdc` for live updates
+5. **For Database Work**: Use `agents/architecture/database/` guides for persistence patterns
+6. **For Authentication**: Use `agents/rules/motia/middlewares.mdc` for security patterns
+
+The agents folder provides the canonical Motia development patterns and should be the primary reference for all step implementations.
+
+
 
 ### Step Naming Conventions
 - Use kebab-case for filenames: `resource-processing.step.ts`, `data_processor_step.py`
@@ -64,139 +83,6 @@ config.yml                 # Motia configuration
 - **Error Handling**: Always use try/catch with proper logging and context
 - **Logging**: Use structured logging with traceId context for traceability
 
-## Step Development Patterns
-
-### API Steps (JavaScript)
-```javascript
-const config = {
-  type: 'api',
-  name: 'CreateResource',
-  method: 'POST',
-  path: '/resources',
-  bodySchema: {
-    type: 'object',
-    properties: {
-      title: { type: 'string', minLength: 1 },
-      category: { type: 'string', minLength: 1 }
-    },
-    required: ['title', 'category']
-  },
-  emits: ['resource.created'],
-  flows: ['resource-management']
-}
-
-const handler = async (req, { emit, state, logger, traceId }) => {
-  // Always validate inputs
-  // Use structured logging with context
-  // Handle errors gracefully
-  // Return proper HTTP responses
-  try {
-    const { title, category } = req.body
-    const resourceId = crypto.randomUUID()
-    
-    await state.set(traceId, 'resource', { id: resourceId, title, category })
-    await emit({ topic: 'resource.created', data: { id: resourceId, title, category } })
-    
-    logger.info('Resource created', { resourceId, title, category, traceId })
-    return { status: 201, body: { id: resourceId, message: 'Resource created' } }
-  } catch (error) {
-    logger.error('Resource creation failed', { error: error.message, traceId })
-    return { status: 500, body: { error: 'Creation failed' } }
-  }
-}
-
-module.exports = { config, handler }
-```
-
-### API Steps (TypeScript)
-```typescript
-import { ApiRouteConfig, Handlers } from 'motia'
-import { z } from 'zod'
-
-export const config: ApiRouteConfig = {
-  type: 'api',
-  name: 'CreateResource',
-  method: 'POST',
-  path: '/resources',
-  bodySchema: z.object({
-    title: z.string().min(1),
-    category: z.string().min(1)
-  }),
-  responseSchema: { 201: z.object({ id: z.string(), message: z.string() }) },
-  emits: ['resource.created'],
-  flows: ['resource-management']
-}
-
-export const handler: Handlers['CreateResource'] = async (req, { emit, state, logger, traceId }) => {
-  // Always validate inputs
-  // Use structured logging with context
-  // Handle errors gracefully
-  // Return proper HTTP responses
-  try {
-    const { title, category } = req.body
-    const resourceId = crypto.randomUUID()
-    
-    await state.set(traceId, 'resource', { id: resourceId, title, category })
-    await emit({ topic: 'resource.created', data: { id: resourceId, title, category } })
-    
-    logger.info('Resource created', { resourceId, title, category, traceId })
-    return { status: 201, body: { id: resourceId, message: 'Resource created' } }
-  } catch (error) {
-    logger.error('Resource creation failed', { error: error.message, traceId })
-    return { status: 500, body: { error: 'Creation failed' } }
-  }
-}
-```
-
-### Event Steps (Python)
-```python
-# resource_processor_step.py
-config = {
-    "type": "event",
-    "name": "ProcessResourceData",
-    "subscribes": ["resource.created"],
-    "emits": ["resource.processed"],
-    "flows": ["resource-management"]
-}
-
-async def handler(input_data, ctx):
-    # Use ctx.logger for logging
-    # Access state via ctx.state  
-    # Emit events via ctx.emit
-    # Handle exceptions properly
-    try:
-        resource_id = input_data.get('id')
-        title = input_data.get('title')
-        category = input_data.get('category')
-        
-        # Process the resource data
-        processed_data = {
-            'id': resource_id,
-            'title': title.upper(),
-            'category': category,
-            'processed_at': ctx.utils.dates.now().isoformat(),
-            'status': 'processed'
-        }
-        
-        await ctx.state.set(ctx.trace_id, f'processed_resource_{resource_id}', processed_data)
-        await ctx.emit({
-            'topic': 'resource.processed',
-            'data': processed_data
-        })
-        
-        ctx.logger.info('Resource processed successfully', {'resource_id': resource_id, 'trace_id': ctx.trace_id})
-    except Exception as error:
-        ctx.logger.error('Resource processing failed', {'error': str(error), 'trace_id': ctx.trace_id})
-```
-
-### Stream Configuration
-```typescript
-export const config: StreamConfig = {
-  name: 'resource-updates',
-  schema: resourceUpdateSchema,
-  baseConfig: { storageType: 'default', ttl: 3600 }
-}
-```
 
 ## Multi-language Integration
 
@@ -344,12 +230,20 @@ Set required environment variables:
 ## Development Workflow
 
 1. **Plan**: Define the flow and required steps
-2. **Create**: Start with step configurations
-3. **Implement**: Write handlers with proper error handling
-4. **Test**: Add unit and integration tests
-5. **Integrate**: Connect steps via topics/events
-6. **Monitor**: Add logging and observability
-7. **Deploy**: Use proper CI/CD pipelines
+2. **Reference**: Check the appropriate `.mdc` files in the `agents/` folder for patterns and best practices
+3. **Create**: Start with step configurations following the agents folder guidelines
+4. **Implement**: Write handlers with proper error handling using the documented patterns
+5. **Test**: Add unit and integration tests
+6. **Integrate**: Connect steps via topics/events
+7. **Monitor**: Add logging and observability
+8. **Deploy**: Use proper CI/CD pipelines
+
+### Quick Reference for Development Steps
+
+Before creating any Motia components, always check:
+- `agents/index.mdc` for general guidance
+- Specific `.mdc` files in `agents/rules/motia/` for step-type patterns  
+- `agents/architecture/` files for system-level decisions
 
 ## Common Patterns
 
