@@ -37,34 +37,38 @@ Motia seamlessly combines JavaScript, TypeScript, Python, and Ruby in a single e
 The `agents/` folder contains the proper Motia documentation structure and development rules:
 
 ### Documentation Structure
-- **`agents/index.mdc`** - Main index file referencing all development guides
-- **`agents/architecture/`** - Database and system architecture documentation
-  - `database/database.mdc` - Database integration patterns
-  - `database/database-migration.mdc` - Migration procedures
-  - `architecture.mdc` - System architecture guidelines
-  - `error-handling.mdc` - Error handling patterns
-- **`agents/rules/motia/`** - Step-specific development rules
-  - `api-steps.mdc` - HTTP endpoint creation guide
-  - `event-steps.mdc` - Event-driven processing patterns
-  - `cron-steps.mdc` - Scheduled task implementation
-  - `ui-steps.mdc` - User interface step patterns
-  - `virtual-steps.mdc` - Virtual step documentation
-  - `middlewares.mdc` - Middleware implementation patterns
-  - `realtime-streaming.mdc` - Real-time feature implementation
-  - `state-management.mdc` - State and caching patterns
+- **`agents/index.mdc`** - Main index with references to database migrations, real-time events, state management, and authentication
+- **`agents/architecture/`** - Core architecture and technical patterns
+  - `database/database.mdc` - Knex database connections, repository patterns, camelCase/snake_case conversion
+  - `database/database-migration.mdc` - Knex migration setup and commands
+  - `architecture.mdc` - Project structure, DDD principles, services organization, logging practices
+  - `error-handling.mdc` - Custom error classes (BaseError), core middleware for error handling
+- **`agents/rules/motia/`** - Complete Motia step implementation guides
+  - `api-steps.mdc` - HTTP endpoint creation with Zod validation, request/response handling
+  - `event-steps.mdc` - Background event processing for async tasks (LLM calls, file processing, emails)
+  - `cron-steps.mdc` - Scheduled tasks with cron expressions and emit patterns
+  - `ui-steps.mdc` - Custom Workbench visualization components (EventNode, ApiNode, CronNode)
+  - `virtual-steps.mdc` - NOOP steps and virtual connections for Workbench flow visualization
+  - `middlewares.mdc` - Middleware patterns for authentication, validation, error handling
+  - `realtime-streaming.mdc` - Motia Streams for real-time data (chat, collaboration, live updates)
+  - `state-management.mdc` - Cross-step state storage and caching patterns
 
 ### Using the Agents Folder
 
 When developing with Motia, always reference the appropriate `.mdc` files in the agents folder:
 
-1. **For API Development**: Use `agents/rules/motia/api-steps.mdc` for HTTP endpoint patterns
-2. **For Event Processing**: Use `agents/rules/motia/event-steps.mdc` for event-driven workflows
-3. **For Background Jobs**: Use `agents/rules/motia/cron-steps.mdc` for scheduled tasks
-4. **For Real-time Features**: Use `agents/rules/motia/realtime-streaming.mdc` for live updates
-5. **For Database Work**: Use `agents/architecture/database/` guides for persistence patterns
-6. **For Authentication**: Use `agents/rules/motia/middlewares.mdc` for security patterns
+1. **For API Development**: Use `agents/rules/motia/api-steps.mdc` for HTTP endpoints with Zod schemas and request/response patterns
+2. **For Event Processing**: Use `agents/rules/motia/event-steps.mdc` for async background tasks (LLM calls, file processing, emails, webhooks)
+3. **For Scheduled Jobs**: Use `agents/rules/motia/cron-steps.mdc` for cron expressions and scheduled task patterns
+4. **For Real-time Features**: Use `agents/rules/motia/realtime-streaming.mdc` for Motia Streams (chat, collaboration, live data)
+5. **For Database Work**: Use `agents/architecture/database/` for Knex patterns, migrations, and repository structure
+6. **For Error Handling**: Use `agents/architecture/error-handling.mdc` for custom error classes and core middleware
+7. **For Project Structure**: Use `agents/architecture/architecture.mdc` for DDD patterns, services organization, and logging
+8. **For Middleware**: Use `agents/rules/motia/middlewares.mdc` for authentication, validation, and error handling middleware
+9. **For Workbench UI**: Use `agents/rules/motia/ui-steps.mdc` for custom step visualization components
+10. **For Workflow Visualization**: Use `agents/rules/motia/virtual-steps.mdc` for NOOP steps and virtual connections
 
-The agents folder provides the canonical Motia development patterns and should be the primary reference for all step implementations.
+The agents folder provides comprehensive, production-ready Motia patterns with detailed code examples and should be the primary reference for all development work.
 
 
 
