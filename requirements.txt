@@ -1,0 +1,27 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy[asyncio]
+asyncpg
+alembic
+redis[hiredis]
+aioredis
+pillow
+opencv-python
+celery
+flower
+httpx
+aiofiles
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+moviepy[optional]
+# torch
+# diffusers
+# transformers
+# accelerate
+# safetensors
+# Pillow
+# protobuf
+# sentencepiece

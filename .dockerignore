@@ -1,0 +1,19 @@
+# Ignore virtual environment
+venv/
+*.pyc
+__pycache__/
+
+# Ignore local files
+*.log
+*.rdb
+*.sqlite3
+
+# Ignore big folders
+uploads/
+outputs/
+
+# Git and docs
+.git/
+.gitignore
+README.md
+document.md
