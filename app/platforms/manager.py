@@ -10,6 +10,7 @@ from app.platforms.google_ads import GoogleAdsClient
 from app.platforms.meta import MetaAdsClient
 from app.platforms.tiktok import TikTokAdsClient
 from app.platforms.linkedin import LinkedInAdsClient
+from app.core.platform_rate_limit import get_platform_rate_limiter
 
 logger = structlog.get_logger(__name__)
 
@@ -19,6 +20,7 @@ class PlatformManager:
     Unified manager for all advertising platform integrations.
     
     Provides a single interface to interact with Google Ads, Meta, TikTok, and LinkedIn.
+    Includes automatic rate limit handling for all platforms.
     """
     
     def __init__(self):
@@ -27,6 +29,7 @@ class PlatformManager:
         self.meta = MetaAdsClient()
         self.tiktok = TikTokAdsClient()
         self.linkedin = LinkedInAdsClient()
+        self.rate_limiter = get_platform_rate_limiter()
         
         self._clients = {
             Platform.GOOGLE_ADS: self.google_ads,
@@ -72,6 +75,17 @@ class PlatformManager:
                 "platform_not_configured",
                 platform=platform.value,
                 campaign_id=campaign.get("campaign_id")
+            )
+            return None
+        
+        # Check rate limit before making API call
+        try:
+            await self.rate_limiter.check_rate_limit(platform.value)
+        except Exception as e:
+            logger.error(
+                "platform_rate_limit_check_failed",
+                platform=platform.value,
+                error=str(e)
             )
             return None
         
@@ -169,6 +183,17 @@ class PlatformManager:
             )
             return False
         
+        # Check rate limit before making API call
+        try:
+            await self.rate_limiter.check_rate_limit(platform.value)
+        except Exception as e:
+            logger.error(
+                "platform_rate_limit_check_failed_for_update",
+                platform=platform.value,
+                error=str(e)
+            )
+            return False
+        
         try:
             platform_campaign_id = campaign.get("platform_campaign_id")
             metadata = campaign.get("metadata", {})
@@ -223,6 +248,13 @@ class PlatformManager:
         if not client or not client.is_configured():
             return False
         
+        # Check rate limit
+        try:
+            await self.rate_limiter.check_rate_limit(platform.value)
+        except Exception as e:
+            logger.error("rate_limit_exceeded_for_pause", error=str(e))
+            return False
+        
         try:
             platform_campaign_id = campaign.get("platform_campaign_id")
             metadata = campaign.get("metadata", {})
@@ -255,6 +287,13 @@ class PlatformManager:
         if not client or not client.is_configured():
             return False
         
+        # Check rate limit
+        try:
+            await self.rate_limiter.check_rate_limit(platform.value)
+        except Exception as e:
+            logger.error("rate_limit_exceeded_for_activate", error=str(e))
+            return False
+        
         try:
             platform_campaign_id = campaign.get("platform_campaign_id")
             metadata = campaign.get("metadata", {})
@@ -283,3 +322,7 @@ class PlatformManager:
             if client.is_configured():
                 configured.append(platform)
         return configured
+    
+    def get_rate_limit_stats(self) -> Dict:
+        """Get rate limit statistics for all platforms."""
+        return self.rate_limiter.get_all_usage_stats()

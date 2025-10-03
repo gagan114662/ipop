@@ -4,6 +4,7 @@ Admin API endpoints for system management and monitoring.
 from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Dict, Any
+from datetime import datetime
 import structlog
 
 from app.core.database import get_db
@@ -120,9 +121,26 @@ async def get_platforms_status(
             "status": "ready" if is_configured else "not_configured"
         })
     
+    # Get rate limit stats
+    rate_limit_stats = platform_manager.get_rate_limit_stats()
+    
     return {
         "platforms": status_list,
-        "total_configured": len(platform_manager.get_configured_platforms())
+        "total_configured": len(platform_manager.get_configured_platforms()),
+        "rate_limits": rate_limit_stats
+    }
+
+
+@router.get("/platforms/rate-limits")
+async def get_platform_rate_limits(
+    current_user: dict = Depends(get_current_user)
+):
+    """Get detailed rate limit statistics for all platforms."""
+    platform_manager = PlatformManager()
+    
+    return {
+        "rate_limits": platform_manager.get_rate_limit_stats(),
+        "timestamp": datetime.utcnow().isoformat()
     }
 
 

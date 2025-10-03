@@ -79,7 +79,8 @@ class AutomatedScheduler:
     
     async def _ingest_metrics_job(self):
         """Job: Ingest metrics from all platforms."""
-        logger.info("scheduled_metrics_ingestion_started")
+        job_start = datetime.utcnow()
+        logger.info("scheduled_metrics_ingestion_started", timestamp=job_start)
         
         try:
             db = Database.get_database()
@@ -96,15 +97,22 @@ class AutomatedScheduler:
             )
             
         except Exception as e:
-            logger.error(
+            logger.critical(
                 "scheduled_metrics_ingestion_failed",
                 error=str(e),
-                exc_info=True
+                error_type=type(e).__name__,
+                exc_info=True,
+                timestamp=datetime.utcnow()
             )
+            # Don't raise - allow scheduler to continue with other jobs
+            
+            # TODO: Send alert to monitoring system
+            # await self._send_alert("metrics_ingestion_failed", str(e))
     
     async def _optimization_job(self):
         """Job: Run optimization for all active campaigns."""
-        logger.info("scheduled_optimization_started")
+        job_start = datetime.utcnow()
+        logger.info("scheduled_optimization_started", timestamp=job_start)
         
         try:
             db = Database.get_database()
@@ -120,46 +128,63 @@ class AutomatedScheduler:
             total_failed = 0
             
             for client in clients:
-                client_id = client["client_id"]
-                
-                # Run optimization for all campaigns
-                decisions = await decision_engine.optimize_all_campaigns(client_id)
-                total_decisions += len(decisions)
-                
-                # Apply decisions if auto-optimization is enabled
-                if client.get("settings", {}).get("auto_optimization_enabled", True):
-                    for decision in decisions:
-                        try:
-                            applied = await self._apply_decision_to_platform(
-                                decision,
-                                platform_manager,
-                                db
-                            )
-                            if applied:
-                                total_applied += 1
-                            else:
+                try:
+                    client_id = client["client_id"]
+                    
+                    # Run optimization for all campaigns
+                    decisions = await decision_engine.optimize_all_campaigns(client_id)
+                    total_decisions += len(decisions)
+                    
+                    # Apply decisions if auto-optimization is enabled
+                    if client.get("settings", {}).get("auto_optimization_enabled", True):
+                        for decision in decisions:
+                            try:
+                                applied = await self._apply_decision_to_platform(
+                                    decision,
+                                    platform_manager,
+                                    db
+                                )
+                                if applied:
+                                    total_applied += 1
+                                else:
+                                    total_failed += 1
+                            except Exception as e:
                                 total_failed += 1
-                        except Exception as e:
-                            total_failed += 1
-                            logger.error(
-                                "decision_application_failed",
-                                campaign_id=decision.campaign_id,
-                                error=str(e)
-                            )
+                                logger.error(
+                                    "decision_application_failed",
+                                    campaign_id=decision.campaign_id,
+                                    client_id=client_id,
+                                    error=str(e)
+                                )
+                except Exception as e:
+                    logger.error(
+                        "client_optimization_failed",
+                        client_id=client.get("client_id"),
+                        error=str(e)
+                    )
+                    # Continue with next client
+                    continue
             
             logger.info(
                 "scheduled_optimization_completed",
                 total_decisions=total_decisions,
                 applied=total_applied,
-                failed=total_failed
+                failed=total_failed,
+                duration=(datetime.utcnow() - job_start).total_seconds()
             )
             
         except Exception as e:
-            logger.error(
+            logger.critical(
                 "scheduled_optimization_failed",
                 error=str(e),
-                exc_info=True
+                error_type=type(e).__name__,
+                exc_info=True,
+                timestamp=datetime.utcnow()
             )
+            # Don't raise - allow scheduler to continue
+            
+            # TODO: Send alert to monitoring system
+            # await self._send_alert("optimization_failed", str(e))
     
     async def _apply_decision_to_platform(
         self,
@@ -286,7 +311,8 @@ class AutomatedScheduler:
     
     async def _benchmark_update_job(self):
         """Job: Update system benchmarks."""
-        logger.info("scheduled_benchmark_update_started")
+        job_start = datetime.utcnow()
+        logger.info("scheduled_benchmark_update_started", timestamp=job_start)
         
         try:
             db = Database.get_database()
@@ -294,14 +320,23 @@ class AutomatedScheduler:
             
             await ingestion_service._update_system_benchmarks()
             
-            logger.info("scheduled_benchmark_update_completed")
+            logger.info(
+                "scheduled_benchmark_update_completed",
+                duration=(datetime.utcnow() - job_start).total_seconds()
+            )
             
         except Exception as e:
-            logger.error(
+            logger.critical(
                 "scheduled_benchmark_update_failed",
                 error=str(e),
-                exc_info=True
+                error_type=type(e).__name__,
+                exc_info=True,
+                timestamp=datetime.utcnow()
             )
+            # Don't raise - allow scheduler to continue
+            
+            # TODO: Send alert to monitoring system
+            # await self._send_alert("benchmark_update_failed", str(e))
     
     def is_running(self) -> bool:
         """Check if scheduler is running."""
