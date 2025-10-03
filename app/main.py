@@ -30,9 +30,26 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("application_startup", version=settings.APP_VERSION)
     await Database.connect_db()
+    
+    # Start automated scheduler if enabled
+    if settings.HOURLY_OPTIMIZATION_ENABLED:
+        from app.tasks.scheduler import get_scheduler
+        scheduler = get_scheduler()
+        scheduler.start()
+        logger.info("automated_scheduler_started")
+    
     yield
+    
     # Shutdown
     logger.info("application_shutdown")
+    
+    # Stop scheduler
+    if settings.HOURLY_OPTIMIZATION_ENABLED:
+        from app.tasks.scheduler import get_scheduler
+        scheduler = get_scheduler()
+        scheduler.stop()
+        logger.info("automated_scheduler_stopped")
+    
     await Database.close_db()
 
 
@@ -152,6 +169,15 @@ app.include_router(
     intelligence.router,
     prefix=f"{settings.API_V1_PREFIX}/intelligence",
     tags=["Intelligence"]
+)
+
+# Import and include admin router
+from app.api.v1 import admin
+
+app.include_router(
+    admin.router,
+    prefix=f"{settings.API_V1_PREFIX}/admin",
+    tags=["Admin"]
 )
 
 

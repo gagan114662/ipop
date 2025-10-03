@@ -224,10 +224,65 @@ async def _apply_decision(decision, db: AsyncIOMotorDatabase):
     Apply an intelligence decision to a campaign.
     
     This updates the campaign budget and marks the decision as applied.
+    If platform credentials are configured, it also pushes changes to the actual platform.
     """
     from datetime import datetime
     from app.models.intelligence import DecisionType
+    from app.models.campaign import Platform
+    from app.platforms.manager import PlatformManager
     
+    platform_manager = PlatformManager()
+    
+    # Get campaign details
+    campaign = await db.campaigns.find_one({
+        "client_id": decision.client_id,
+        "campaign_id": decision.campaign_id
+    })
+    
+    if not campaign:
+        logger.error("campaign_not_found", campaign_id=decision.campaign_id)
+        return
+    
+    platform = Platform(campaign["platform"])
+    platform_push_success = False
+    
+    # Try to push to platform if configured
+    if platform_manager.is_platform_configured(platform):
+        try:
+            if decision.decision_type == DecisionType.BUDGET_INCREASE or \
+               decision.decision_type == DecisionType.BUDGET_DECREASE:
+                platform_push_success = await platform_manager.update_budget(
+                    platform=platform,
+                    campaign=campaign,
+                    new_budget=decision.new_budget
+                )
+            
+            elif decision.decision_type == DecisionType.PAUSE_CAMPAIGN:
+                platform_push_success = await platform_manager.pause_campaign(
+                    platform=platform,
+                    campaign=campaign
+                )
+            
+            elif decision.decision_type == DecisionType.ACTIVATE_CAMPAIGN:
+                platform_push_success = await platform_manager.activate_campaign(
+                    platform=platform,
+                    campaign=campaign
+                )
+            
+        except Exception as e:
+            logger.error(
+                "platform_push_failed",
+                campaign_id=decision.campaign_id,
+                error=str(e)
+            )
+    else:
+        logger.info(
+            "platform_not_configured_local_only",
+            platform=platform.value,
+            campaign_id=decision.campaign_id
+        )
+    
+    # Always update local database
     if decision.decision_type == DecisionType.BUDGET_INCREASE or decision.decision_type == DecisionType.BUDGET_DECREASE:
         # Update campaign budget
         await db.campaigns.update_one(
@@ -291,7 +346,8 @@ async def _apply_decision(decision, db: AsyncIOMotorDatabase):
         {
             "$set": {
                 "applied": True,
-                "applied_at": datetime.utcnow()
+                "applied_at": datetime.utcnow(),
+                "platform_push_success": platform_push_success
             }
         }
     )
@@ -300,5 +356,6 @@ async def _apply_decision(decision, db: AsyncIOMotorDatabase):
         "decision_applied",
         campaign_id=decision.campaign_id,
         decision_type=decision.decision_type.value,
-        new_budget=decision.new_budget
+        new_budget=decision.new_budget,
+        platform_pushed=platform_push_success
     )
