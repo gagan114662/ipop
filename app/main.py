@@ -31,6 +31,14 @@ async def lifespan(app: FastAPI):
     logger.info("application_startup", version=settings.APP_VERSION)
     await Database.connect_db()
     
+    # Create database indexes
+    try:
+        from app.db.create_indexes import create_indexes
+        await create_indexes()
+        logger.info("database_indexes_created")
+    except Exception as e:
+        logger.error("database_indexes_creation_failed", error=str(e))
+    
     # Start automated scheduler if enabled
     if settings.HOURLY_OPTIMIZATION_ENABLED:
         from app.tasks.scheduler import get_scheduler
@@ -62,6 +70,40 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Add rate limiting middleware
+if settings.RATE_LIMIT_ENABLED:
+    from fastapi import HTTPException
+    from app.core.rate_limit import get_rate_limiter
+    
+    @app.middleware("http")
+    async def rate_limit_middleware(request: Request, call_next):
+        """Apply rate limiting to all requests."""
+        # Skip rate limiting for health check and docs
+        if request.url.path in ["/health", "/docs", "/redoc", "/openapi.json"]:
+            return await call_next(request)
+        
+        try:
+            rate_limiter = get_rate_limiter()
+            await rate_limiter.check_rate_limit(request)
+        except HTTPException as e:
+            return JSONResponse(
+                status_code=e.status_code,
+                content={"detail": e.detail},
+                headers=e.headers or {}
+            )
+        
+        response = await call_next(request)
+        
+        # Add rate limit headers if available
+        if hasattr(request.state, "rate_limit_remaining"):
+            response.headers["X-RateLimit-Limit"] = str(request.state.rate_limit_limit)
+            response.headers["X-RateLimit-Remaining"] = str(request.state.rate_limit_remaining)
+            response.headers["X-RateLimit-Reset"] = str(request.state.rate_limit_reset)
+        
+        return response
+    
+    logger.info("rate_limiting_enabled", limit=settings.RATE_LIMIT_PER_MINUTE)
 
 # Add CORS middleware
 app.add_middleware(
