@@ -10,7 +10,7 @@ import time
 
 from app.core.config import settings
 from app.core.database import Database
-from app.api.v1 import auth, clients, skus, campaigns, metrics, intelligence, creatives, creative_tests
+from app.api.v1 import auth, clients, skus, campaigns, metrics, intelligence, creatives, creative_tests, ad_resizer
 
 # Configure logging
 structlog.configure(
@@ -223,6 +223,12 @@ app.include_router(
     creative_tests.router,
     prefix=f"{settings.API_V1_PREFIX}/creative-tests",
     tags=["Creative Testing"]
+)
+
+app.include_router(
+    ad_resizer.router,
+    prefix=f"{settings.API_V1_PREFIX}/ad-resizer",
+    tags=["Ad Resizer"]
 )
 
 # Import and include admin router
