@@ -39,8 +39,24 @@ async def test_db():
 @pytest_asyncio.fixture
 async def client():
     """Create a test client for the FastAPI app."""
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    from httpx import ASGITransport
+
+    # Initialize database before tests
+    await Database.connect_db()
+
+    # Clean up test data from previous runs
+    db = Database.get_database()
+    await db.creatives.delete_many({})
+    await db.creative_tests.delete_many({})
+    await db.creative_metrics.delete_many({})
+    await db.skus.delete_many({})
+    await db.campaigns.delete_many({})
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
+
+    # Cleanup database after tests
+    await Database.close_db()
 
 
 @pytest.fixture
@@ -83,3 +99,71 @@ def test_campaign_data():
         "status": "active",
         "optimization_mode": "explore"
     }
+
+
+@pytest_asyncio.fixture
+async def auth_headers(client: AsyncClient):
+    """Create authentication headers with a test user."""
+    # Register a test user
+    register_data = {
+        "email": "test@example.com",
+        "password": "testpass",
+        "company_name": "Test Co"
+    }
+
+    reg_response = await client.post("/api/v1/auth/register", json=register_data)
+
+    if reg_response.status_code not in [200, 201]:
+        # User might already exist, try login
+        pass
+
+    # Login to get token
+    login_data = {
+        "email": "test@example.com",
+        "password": "testpass"
+    }
+
+    response = await client.post("/api/v1/auth/login", json=login_data)
+
+    if response.status_code != 200:
+        raise Exception(f"Login failed: {response.status_code} - {response.text}")
+
+    token_data = response.json()
+    access_token = token_data.get("access_token")
+
+    return {"Authorization": f"Bearer {access_token}"}
+
+
+@pytest_asyncio.fixture
+async def test_client_id(auth_headers: dict, client: AsyncClient):
+    """Return the test client ID from the authenticated user."""
+    # Get current user info to extract client_id
+    response = await client.get("/api/v1/clients/me", headers=auth_headers)
+    if response.status_code == 200:
+        return response.json().get("_id")
+    return "test_client_id"
+
+
+@pytest_asyncio.fixture
+async def other_client_auth_headers(client: AsyncClient):
+    """Create authentication headers for a second test user."""
+    # Register a second test user
+    register_data = {
+        "email": "other@example.com",
+        "password": "otherpass",
+        "company_name": "Other Co"
+    }
+
+    await client.post("/api/v1/auth/register", json=register_data)
+
+    # Login to get token
+    login_data = {
+        "email": "other@example.com",
+        "password": "otherpass"
+    }
+
+    response = await client.post("/api/v1/auth/login", json=login_data)
+    token_data = response.json()
+    access_token = token_data.get("access_token")
+
+    return {"Authorization": f"Bearer {access_token}"}

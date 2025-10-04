@@ -44,6 +44,12 @@ class CampaignBase(BaseModel):
     status: CampaignStatus = CampaignStatus.ACTIVE
     optimization_mode: OptimizationMode = OptimizationMode.EXPLORE
     integrator: Optional[str] = None  # revealbot, adroll, etc.
+
+    # Creative management
+    creative_ids: List[str] = Field(default_factory=list, description="Linked creative IDs")
+    primary_creative_id: Optional[str] = Field(None, description="Primary/active creative")
+    creative_rotation_strategy: str = Field("optimized", description="even, optimized, explore_exploit")
+
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 

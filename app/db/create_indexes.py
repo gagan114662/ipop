@@ -66,7 +66,31 @@ async def create_indexes():
         await db.system_benchmarks.create_index([("platform", 1), ("month", 1)], unique=True)
         await db.system_benchmarks.create_index([("platform", 1), ("timestamp", -1)])
         logger.info("indexes_created", collection="system_benchmarks")
-        
+
+        # Creatives collection
+        await db.creatives.create_index([("client_id", 1), ("creative_id", 1)], unique=True)
+        await db.creatives.create_index([("client_id", 1), ("status", 1)])
+        await db.creatives.create_index([("campaign_ids", 1), ("status", 1)])
+        await db.creatives.create_index([("platform", 1), ("platform_creative_id", 1)])
+        await db.creatives.create_index([("created_at", -1)])
+        await db.creatives.create_index([("tags", 1)])
+        logger.info("indexes_created", collection="creatives")
+
+        # Creative metrics collection
+        await db.creative_metrics.create_index([("creative_id", 1), ("date", -1)])
+        await db.creative_metrics.create_index([("campaign_id", 1), ("date", -1)])
+        await db.creative_metrics.create_index([("client_id", 1), ("date", -1)])
+        await db.creative_metrics.create_index([("platform", 1), ("date", -1)])
+        await db.creative_metrics.create_index([("date", -1)])
+        logger.info("indexes_created", collection="creative_metrics")
+
+        # Creative tests collection
+        await db.creative_tests.create_index([("client_id", 1), ("test_id", 1)], unique=True)
+        await db.creative_tests.create_index([("campaign_id", 1), ("status", 1)])
+        await db.creative_tests.create_index([("created_at", -1)])
+        await db.creative_tests.create_index([("status", 1), ("is_concluded", 1)])
+        logger.info("indexes_created", collection="creative_tests")
+
         logger.info("all_indexes_created_successfully")
         
     except Exception as e:
@@ -85,8 +109,9 @@ async def drop_indexes():
     db = client[settings.MONGODB_DB_NAME]
     
     try:
-        collections = ["clients", "skus", "campaigns", "performance_metrics", 
-                      "intelligence_decisions", "system_benchmarks"]
+        collections = ["clients", "skus", "campaigns", "performance_metrics",
+                      "intelligence_decisions", "system_benchmarks",
+                      "creatives", "creative_metrics", "creative_tests"]
         
         for collection_name in collections:
             collection = db[collection_name]

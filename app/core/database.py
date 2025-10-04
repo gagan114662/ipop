@@ -52,50 +52,54 @@ class Database:
     @classmethod
     async def _create_indexes(cls):
         """Create database indexes for performance."""
-        if not cls.db:
+        if cls.db is None:
             return
-        
-        # Clients collection indexes
-        await cls.db.clients.create_index("email", unique=True)
-        await cls.db.clients.create_index("is_active")
-        await cls.db.clients.create_index("created_at")
-        
-        # SKUs collection indexes
-        await cls.db.skus.create_index("client_id")
-        await cls.db.skus.create_index([("client_id", 1), ("sku_id", 1)], unique=True)
-        await cls.db.skus.create_index("is_active")
-        
-        # Campaigns collection indexes
-        await cls.db.campaigns.create_index("client_id")
-        await cls.db.campaigns.create_index("sku_id")
-        await cls.db.campaigns.create_index([("client_id", 1), ("campaign_id", 1)])
-        await cls.db.campaigns.create_index("platform")
-        await cls.db.campaigns.create_index("status")
-        await cls.db.campaigns.create_index("created_at")
-        
-        # Performance metrics indexes
-        await cls.db.performance_metrics.create_index([("campaign_id", 1), ("timestamp", -1)])
-        await cls.db.performance_metrics.create_index("client_id")
-        await cls.db.performance_metrics.create_index("timestamp")
-        await cls.db.performance_metrics.create_index([("client_id", 1), ("timestamp", -1)])
-        
-        # Intelligence decisions indexes
-        await cls.db.intelligence_decisions.create_index([("campaign_id", 1), ("timestamp", -1)])
-        await cls.db.intelligence_decisions.create_index("client_id")
-        await cls.db.intelligence_decisions.create_index("mode")
-        await cls.db.intelligence_decisions.create_index("timestamp")
-        
-        # System benchmarks indexes
-        await cls.db.system_benchmarks.create_index("platform")
-        await cls.db.system_benchmarks.create_index("industry")
-        await cls.db.system_benchmarks.create_index("timestamp")
-        
-        logger.info("database_indexes_created")
+
+        try:
+            # Clients collection indexes
+            await cls.db.clients.create_index("email", unique=True)
+            await cls.db.clients.create_index("is_active")
+            await cls.db.clients.create_index("created_at")
+
+            # SKUs collection indexes
+            await cls.db.skus.create_index("client_id")
+            await cls.db.skus.create_index([("client_id", 1), ("sku_id", 1)], unique=True)
+            await cls.db.skus.create_index("is_active")
+
+            # Campaigns collection indexes
+            await cls.db.campaigns.create_index("client_id")
+            await cls.db.campaigns.create_index("sku_id")
+            await cls.db.campaigns.create_index([("client_id", 1), ("campaign_id", 1)])
+            await cls.db.campaigns.create_index("platform")
+            await cls.db.campaigns.create_index("status")
+            await cls.db.campaigns.create_index("created_at")
+
+            # Performance metrics indexes
+            await cls.db.performance_metrics.create_index([("campaign_id", 1), ("timestamp", -1)])
+            await cls.db.performance_metrics.create_index("client_id")
+            await cls.db.performance_metrics.create_index("timestamp")
+            await cls.db.performance_metrics.create_index([("client_id", 1), ("timestamp", -1)])
+
+            # Intelligence decisions indexes
+            await cls.db.intelligence_decisions.create_index([("campaign_id", 1), ("timestamp", -1)])
+            await cls.db.intelligence_decisions.create_index("client_id")
+            await cls.db.intelligence_decisions.create_index("mode")
+            await cls.db.intelligence_decisions.create_index("timestamp")
+
+            # System benchmarks indexes
+            await cls.db.system_benchmarks.create_index("platform")
+            await cls.db.system_benchmarks.create_index("industry")
+            await cls.db.system_benchmarks.create_index("timestamp")
+
+            logger.info("database_indexes_created")
+        except Exception as e:
+            # Indexes may already exist, log and continue
+            logger.warning("index_creation_warning", error=str(e))
     
     @classmethod
     def get_database(cls) -> AsyncIOMotorDatabase:
         """Get database instance."""
-        if not cls.db:
+        if cls.db is None:
             raise RuntimeError("Database not initialized. Call connect_db() first.")
         return cls.db
 
@@ -104,3 +108,7 @@ class Database:
 async def get_db() -> AsyncIOMotorDatabase:
     """Get database instance for FastAPI dependency injection."""
     return Database.get_database()
+
+
+# Alias for compatibility
+get_database = get_db
