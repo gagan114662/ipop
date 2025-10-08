@@ -1,7 +1,7 @@
 """
 Creative management API endpoints.
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from datetime import datetime, timedelta
 from typing import Optional, List
@@ -9,6 +9,7 @@ import structlog
 
 from app.core.database import get_db
 from app.core.security import get_current_user
+from app.mediabuying.manager import handle_new_creative
 from app.models.creative import (
     CreativeCreate,
     CreativeUpdate,
@@ -36,13 +37,15 @@ router = APIRouter()
 @router.post("/", response_model=CreativeResponse, status_code=status.HTTP_201_CREATED)
 async def create_creative(
     creative_data: CreativeCreate,
+    background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Create a new creative asset.
 
-    The creative will be created in DRAFT status by default.
+    If no campaign_id is provided, this will trigger the automated
+    media buying workflow to create a new campaign and A/B test.
     """
     client_id = current_user["client_id"]
 
@@ -93,6 +96,15 @@ async def create_creative(
         creative_type=creative_data.creative_type.value,
         platform=creative_data.platform.value
     )
+
+    # If no campaign is assigned, trigger the automated workflow
+    if not creative_data.campaign_id:
+        background_tasks.add_task(handle_new_creative, creative, client_id, db)
+        logger.info(
+            "triggered_media_buying_automation",
+            client_id=client_id,
+            creative_id=creative.creative_id
+        )
 
     return CreativeResponse(**creative.dict())
 

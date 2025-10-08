@@ -103,7 +103,7 @@ class CreativeTestBase(BaseModel):
     primary_metric: TestMetric = TestMetric.ROAS
 
     # Variants
-    variants: List[TestVariant] = Field(..., min_items=2)
+    variants: List[TestVariant] = Field(..., min_items=1)
 
     # Test settings
     min_sample_size: int = Field(1000, description="Minimum impressions per variant")

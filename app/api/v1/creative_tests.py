@@ -86,21 +86,23 @@ async def create_creative_test(
     if missing:
         raise HTTPException(404, f"Creatives not found: {missing}")
 
-    # Validate traffic allocation sums to 100%
-    total_traffic = sum(v.traffic_allocation for v in test_data.variants)
-    if abs(total_traffic - 100.0) > 0.01:
-        raise HTTPException(
-            400,
-            f"Traffic allocation must sum to 100%, got {total_traffic}%"
-        )
+    # Validate traffic allocation and control variants
+    if len(test_data.variants) > 1:
+        # Validate traffic allocation sums to 100%
+        total_traffic = sum(v.traffic_allocation for v in test_data.variants)
+        if abs(total_traffic - 100.0) > 0.01:
+            raise HTTPException(
+                400,
+                f"Traffic allocation must sum to 100%, got {total_traffic}%"
+            )
 
-    # Validate exactly one control
-    control_count = sum(1 for v in test_data.variants if v.is_control)
-    if control_count != 1:
-        raise HTTPException(
-            400,
-            f"Exactly one control variant required, got {control_count}"
-        )
+        # Validate exactly one control
+        control_count = sum(1 for v in test_data.variants if v.is_control)
+        if control_count != 1:
+            raise HTTPException(
+                400,
+                f"Exactly one control variant required, got {control_count}"
+            )
 
     # Create test document
     test_doc = {
