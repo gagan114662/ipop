@@ -39,6 +39,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - SECRET_KEY=your-super-secret-key-here-min-32-chars-ipop-media-buying-system
       - MONGODB_URL=mongodb://mongodb:27017
       - REDIS_URL=redis://redis:6379/0
       - ENVIRONMENT=development

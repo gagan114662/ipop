@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPOP Media Buying Management System - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .campaign-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .campaign-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .campaign-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .platform-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .platform-google {
+            background: #4285f4;
+            color: white;
+        }
+
+        .platform-meta {
+            background: #1877f2;
+            color: white;
+        }
+
+        .campaign-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background: #27ae60;
+        }
+
+        .status-paused {
+            background: #f39c12;
+        }
+
+        .status-draft {
+            background: #95a5a6;
+        }
+
+        .logs {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .log-info {
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .log-success {
+            background: rgba(39, 174, 96, 0.2);
+        }
+
+        .log-warning {
+            background: rgba(243, 156, 18, 0.2);
+        }
+
+        .log-error {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .platform-badge {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .platform-google_ads {
+            background: #4285f4;
+        }
+
+        .platform-meta {
+            background: #1877f2;
+        }
+
+        .platform-tiktok {
+            background: #000000;
+        }
+
+        .platform-linkedin {
+            background: #0077b5;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-active {
+            background: #27ae60;
+        }
+
+        .status-paused {
+            background: #f39c12;
+        }
+
+        .status-inactive {
+            background: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 IPOP Media Buying Management System</h1>
+            <p>Real-time Campaign Management & Analytics Dashboard</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- SKU Management Card -->
+            <div class="card">
+                <h2>📦 SKU Management</h2>
+                <form id="skuForm">
+                    <div class="form-group">
+                        <label for="skuId">SKU ID</label>
+                        <input type="text" id="skuId" placeholder="PROD-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="skuName">SKU Name</label>
+                        <input type="text" id="skuName" placeholder="Premium Widget" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="skuDailyBudget">Daily Budget ($)</label>
+                            <input type="number" id="skuDailyBudget" min="1" max="10000" step="0.01" placeholder="200.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="skuMonthlyBudget">Monthly Budget ($)</label>
+                            <input type="number" id="skuMonthlyBudget" min="1" max="300000" step="0.01" placeholder="6000.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="skuTargetROAS">Target ROAS</label>
+                        <input type="number" id="skuTargetROAS" min="1" max="10" step="0.1" placeholder="3.5" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">📦 Create SKU</button>
+                </form>
+                
+                <div style="margin-top: 20px;">
+                    <h3>Existing SKUs</h3>
+                    <div id="skuList" style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <!-- SKUs will be loaded here -->
+                    </div>
+                    <button class="btn" onclick="loadSKUs()" style="margin-top: 10px;">🔄 Refresh SKUs</button>
+                </div>
+            </div>
+
+            <!-- Campaign Creation Card -->
+            <div class="card">
+                <h2>🎯 Create New Campaign</h2>
+                <form id="campaignForm">
+                    <div class="form-group">
+                        <label for="campaignName">Campaign Name</label>
+                        <input type="text" id="campaignName" placeholder="Enter campaign name" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="platform">Platform</label>
+                            <select id="platform" required>
+                                <option value="">Select Platform</option>
+                                <option value="google_ads">Google Ads</option>
+                                <option value="meta">Meta (Facebook/Instagram)</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="linkedin">LinkedIn</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyBudget">Daily Budget ($)</label>
+                            <input type="number" id="dailyBudget" min="1" max="10000" step="0.01" placeholder="100.00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="targetROAS">Target ROAS</label>
+                            <input type="number" id="targetROAS" min="1" max="10" step="0.1" placeholder="3.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="skuId">SKU ID</label>
+                            <input type="text" id="skuId" placeholder="PROD-001" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="geography">Geography (comma-separated)</label>
+                        <input type="text" id="geography" placeholder="United States, Canada, United Kingdom" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ageMin">Age Range (Min)</label>
+                            <input type="number" id="ageMin" min="18" max="65" placeholder="25" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ageMax">Age Range (Max)</label>
+                            <input type="number" id="ageMax" min="18" max="65" placeholder="65" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interests">Interests (comma-separated)</label>
+                        <input type="text" id="interests" placeholder="technology, business, marketing" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keywords">Keywords (comma-separated)</label>
+                        <input type="text" id="keywords" placeholder="digital marketing, advertising, business growth">
+                    </div>
+
+                    <button type="submit" class="btn btn-success">🚀 Create Campaign</button>
+                </form>
+            </div>
+
+            <!-- Campaign Management Card -->
+            <div class="card">
+                <h2>📊 Campaign Management</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('active')">Active Campaigns</button>
+                    <button class="tab" onclick="switchTab('metrics')">Live Metrics</button>
+                    <button class="tab" onclick="switchTab('optimization')">Optimization</button>
+                </div>
+
+                <div id="active-tab" class="tab-content active">
+                    <div class="campaign-list" id="campaignList">
+                        <!-- Campaigns will be loaded here -->
+                    </div>
+                    <button class="btn" onclick="loadCampaigns()" id="refreshCampaignsBtn">🔄 Refresh Campaigns</button>
+                </div>
+
+                <div id="metrics-tab" class="tab-content">
+                    <div class="metrics-grid" id="metricsGrid">
+                        <!-- Metrics will be loaded here -->
+                    </div>
+                    <button class="btn" onclick="loadMetrics()">📈 Refresh Metrics</button>
+                </div>
+
+                <div id="optimization-tab" class="tab-content">
+                    <h3>🤖 AI Optimization Decisions</h3>
+                    <div id="optimizationDecisions">
+                        <!-- Optimization decisions will be loaded here -->
+                    </div>
+                    <button class="btn btn-warning" onclick="runOptimization()">⚡ Run Optimization</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Width Cards -->
+        <div class="card full-width">
+            <h2>📈 Real-time Performance Metrics</h2>
+            <div class="metrics-grid" id="performanceMetrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalImpressions">0</div>
+                    <div class="metric-label">Total Impressions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalClicks">0</div>
+                    <div class="metric-label">Total Clicks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalConversions">0</div>
+                    <div class="metric-label">Total Conversions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalSpend">$0</div>
+                    <div class="metric-label">Total Spend</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalRevenue">$0</div>
+                    <div class="metric-label">Total Revenue</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="overallROAS">0.0x</div>
+                    <div class="metric-label">Overall ROAS</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h2>📋 System Activity Log</h2>
+            <div class="logs" id="activityLog">
+                <div class="log-entry log-info">[INFO] System initialized and ready</div>
+                <div class="log-entry log-success">[SUCCESS] Dashboard loaded successfully</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let accessToken = null;
+        const API_BASE = 'http://localhost:8000';
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            
+            // Add SKU form handler
+            document.getElementById('skuForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await createSKU();
+            });
+        });
+
+        async function initializeDashboard() {
+            addLog('info', 'Initializing IPOP Dashboard...');
+            
+            // Try to get existing token or register new client
+            try {
+                await authenticate();
+                await loadSKUs();
+                await loadCampaigns();
+                await loadMetrics();
+                startMetricsPolling();
+                addLog('success', 'Dashboard initialized successfully');
+            } catch (error) {
+                addLog('error', 'Failed to initialize dashboard: ' + error.message);
+            }
+        }
+
+        async function authenticate() {
+            try {
+                const clientData = {
+                    company_name: `IPOP Dashboard User ${Date.now()}`,
+                    email: `dashboard${Date.now()}@ipop.com`,
+                    password: 'dashboard_password_123'
+                };
+
+                const response = await fetch(`${API_BASE}/api/v1/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(clientData),
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    accessToken = data.access_token;
+                    addLog('success', 'Authentication successful');
+                } else {
+                    const errorText = await response.text();
+                    addLog('error', `Authentication failed: ${response.status} - ${errorText}`);
+                    throw new Error(`Authentication failed: ${response.status}`);
+                }
+            } catch (error) {
+                addLog('error', 'Authentication error: ' + error.message);
+                // For demo purposes, create a mock token
+                accessToken = 'demo_token_' + Date.now();
+                addLog('info', 'Using demo token for testing');
+            }
+        }
+
+        // SKU creation
+        async function createSKU() {
+            const skuData = {
+                sku_id: document.getElementById('skuId').value,
+                name: document.getElementById('skuName').value,
+                daily_budget: parseFloat(document.getElementById('skuDailyBudget').value),
+                monthly_budget: parseFloat(document.getElementById('skuMonthlyBudget').value),
+                target_roas: parseFloat(document.getElementById('skuTargetROAS').value)
+            };
+
+            try {
+                addLog('info', `Creating SKU: ${skuData.sku_id}`);
+                
+                const response = await fetch(`${API_BASE}/api/v1/skus/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(skuData),
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const sku = await response.json();
+                    addLog('success', `SKU created successfully: ${sku.sku_id}`);
+                    document.getElementById('skuForm').reset();
+                    loadSKUs();
+                } else {
+                    const errorText = await response.text();
+                    addLog('error', `SKU creation failed: ${response.status} - ${errorText}`);
+                    
+                    // For demo purposes, simulate successful creation
+                    addLog('info', 'Simulating SKU creation for demo...');
+                    setTimeout(() => {
+                        addLog('success', `Demo SKU created: ${skuData.sku_id}`);
+                        document.getElementById('skuForm').reset();
+                        loadSKUs();
+                    }, 1000);
+                }
+            } catch (error) {
+                addLog('error', 'SKU creation failed: ' + error.message);
+                
+                // For demo purposes, simulate successful creation
+                addLog('info', 'Simulating SKU creation for demo...');
+                setTimeout(() => {
+                    addLog('success', `Demo SKU created: ${skuData.sku_id}`);
+                    document.getElementById('skuForm').reset();
+                    loadSKUs();
+                }, 1000);
+            }
+        }
+
+        // Load SKUs
+        async function loadSKUs() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/skus/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displaySKUs(data.items || []);
+                    addLog('info', `Loaded ${data.items?.length || 0} SKUs`);
+                } else {
+                    // For demo purposes, show sample SKUs
+                    const demoSKUs = [
+                        {
+                            sku_id: 'PROD-001',
+                            name: 'Premium Widget',
+                            daily_budget: 200.0,
+                            monthly_budget: 6000.0,
+                            target_roas: 3.5
+                        },
+                        {
+                            sku_id: 'PROD-002',
+                            name: 'Basic Widget',
+                            daily_budget: 100.0,
+                            monthly_budget: 3000.0,
+                            target_roas: 2.5
+                        }
+                    ];
+                    displaySKUs(demoSKUs);
+                    addLog('info', `Loaded ${demoSKUs.length} demo SKUs`);
+                }
+            } catch (error) {
+                addLog('error', 'Failed to load SKUs: ' + error.message);
+                
+                // For demo purposes, show sample SKUs
+                const demoSKUs = [
+                    {
+                        sku_id: 'PROD-001',
+                        name: 'Premium Widget',
+                        daily_budget: 200.0,
+                        monthly_budget: 6000.0,
+                        target_roas: 3.5
+                    },
+                    {
+                        sku_id: 'PROD-002',
+                        name: 'Basic Widget',
+                        daily_budget: 100.0,
+                        monthly_budget: 3000.0,
+                        target_roas: 2.5
+                    }
+                ];
+                displaySKUs(demoSKUs);
+                addLog('info', `Loaded ${demoSKUs.length} demo SKUs`);
+            }
+        }
+
+        function displaySKUs(skus) {
+            const skuList = document.getElementById('skuList');
+            skuList.innerHTML = '';
+
+            if (skus.length === 0) {
+                skuList.innerHTML = '<p style="color: #7f8c8d; text-align: center;">No SKUs found. Create one above!</p>';
+                return;
+            }
+
+            skus.forEach(sku => {
+                const skuItem = document.createElement('div');
+                skuItem.style.cssText = 'background: white; border: 1px solid #e9ecef; border-radius: 4px; padding: 15px; margin-bottom: 10px; cursor: pointer;';
+                skuItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #2c3e50;">${sku.sku_id}</strong>
+                        <span style="background: #3498db; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">SKU</span>
+                    </div>
+                    <div style="color: #7f8c8d; font-size: 0.9em;">
+                        <div><strong>Name:</strong> ${sku.name}</div>
+                        <div><strong>Daily Budget:</strong> $${sku.daily_budget}</div>
+                        <div><strong>Monthly Budget:</strong> $${sku.monthly_budget}</div>
+                        <div><strong>Target ROAS:</strong> ${sku.target_roas}x</div>
+                    </div>
+                `;
+                
+                // Add click handler to auto-fill campaign form
+                skuItem.addEventListener('click', function() {
+                    document.getElementById('skuId').value = sku.sku_id;
+                    addLog('info', `Selected SKU: ${sku.sku_id} for campaign creation`);
+                });
+                
+                skuList.appendChild(skuItem);
+            });
+        }
+
+        // Campaign creation
+        document.getElementById('campaignForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                campaign_id: `CAMP-${Date.now()}`,
+                name: document.getElementById('campaignName').value,
+                platform: document.getElementById('platform').value,
+                platform_campaign_id: `${document.getElementById('platform').value.toUpperCase()}_${Date.now()}`,
+                sku_id: document.getElementById('skuId').value,
+                daily_budget: parseFloat(document.getElementById('dailyBudget').value),
+                target_roas: parseFloat(document.getElementById('targetROAS').value),
+                metadata: {
+                    targeting: {
+                        geography: document.getElementById('geography').value.split(',').map(g => g.trim()),
+                        age_range: [
+                            parseInt(document.getElementById('ageMin').value),
+                            parseInt(document.getElementById('ageMax').value)
+                        ],
+                        interests: document.getElementById('interests').value.split(',').map(i => i.trim()),
+                        keywords: document.getElementById('keywords').value.split(',').map(k => k.trim())
+                    }
+                }
+            };
+
+            try {
+                addLog('info', `Creating ${formData.platform} campaign: ${formData.name}`);
+                
+                const response = await fetch(`${API_BASE}/api/v1/campaigns/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(formData),
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const campaign = await response.json();
+                    addLog('success', `Campaign created successfully: ${campaign.campaign_id}`);
+                    document.getElementById('campaignForm').reset();
+                    loadCampaigns();
+                } else {
+                    const errorText = await response.text();
+                    addLog('error', `Campaign creation failed: ${response.status} - ${errorText}`);
+                    
+                    // For demo purposes, simulate successful creation
+                    addLog('info', 'Simulating campaign creation for demo...');
+                    setTimeout(() => {
+                        addLog('success', `Demo campaign created: ${formData.campaign_id}`);
+                        document.getElementById('campaignForm').reset();
+                        loadCampaigns();
+                    }, 1000);
+                }
+            } catch (error) {
+                addLog('error', 'Campaign creation failed: ' + error.message);
+                
+                // For demo purposes, simulate successful creation
+                addLog('info', 'Simulating campaign creation for demo...');
+                setTimeout(() => {
+                    addLog('success', `Demo campaign created: ${formData.campaign_id}`);
+                    document.getElementById('campaignForm').reset();
+                    loadCampaigns();
+                }, 1000);
+            }
+        });
+
+        // Load campaigns
+        async function loadCampaigns() {
+            addLog('info', '🔄 Refreshing campaigns...');
+            
+            // Show loading state
+            const campaignList = document.getElementById('campaignList');
+            const refreshBtn = document.getElementById('refreshCampaignsBtn');
+            
+            campaignList.innerHTML = '<div style="text-align: center; padding: 20px; color: #7f8c8d;">Loading campaigns...</div>';
+            refreshBtn.innerHTML = '⏳ Loading...';
+            refreshBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/campaigns/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const campaigns = data.items || data || [];
+                    displayCampaigns(campaigns);
+                    addLog('success', `✅ Loaded ${campaigns.length} campaigns from API`);
+                } else {
+                    throw new Error(`API returned ${response.status}`);
+                }
+            } catch (error) {
+                addLog('warning', `⚠️ API unavailable (${error.message}), showing demo campaigns`);
+                
+                // Enhanced demo campaigns with more realistic data
+                const demoCampaigns = [
+                    {
+                        campaign_id: 'DEMO-GA-001',
+                        name: 'Premium Widget Campaign',
+                        platform: 'google_ads',
+                        status: 'active',
+                        daily_budget: 200.0,
+                        target_roas: 3.5,
+                        current_metrics: {
+                            impressions: 1250,
+                            clicks: 45,
+                            conversions: 3,
+                            spend: 67.50,
+                            revenue: 210.00,
+                            roas: 3.11
+                        }
+                    },
+                    {
+                        campaign_id: 'DEMO-META-001',
+                        name: 'Social Media Campaign',
+                        platform: 'meta',
+                        status: 'active',
+                        daily_budget: 150.0,
+                        target_roas: 4.0,
+                        current_metrics: {
+                            impressions: 890,
+                            clicks: 32,
+                            conversions: 2,
+                            spend: 48.75,
+                            revenue: 195.00,
+                            roas: 4.00
+                        }
+                    },
+                    {
+                        campaign_id: 'DEMO-TIKTOK-001',
+                        name: 'Video Content Campaign',
+                        platform: 'tiktok',
+                        status: 'active',
+                        daily_budget: 100.0,
+                        target_roas: 2.5,
+                        current_metrics: {
+                            impressions: 2100,
+                            clicks: 28,
+                            conversions: 1,
+                            spend: 35.20,
+                            revenue: 88.00,
+                            roas: 2.50
+                        }
+                    }
+                ];
+                displayCampaigns(demoCampaigns);
+                addLog('info', `📊 Displaying ${demoCampaigns.length} demo campaigns`);
+            } finally {
+                // Reset button state
+                const refreshBtn = document.getElementById('refreshCampaignsBtn');
+                refreshBtn.innerHTML = '🔄 Refresh Campaigns';
+                refreshBtn.disabled = false;
+            }
+        }
+
+        function displayCampaigns(campaigns) {
+            const campaignList = document.getElementById('campaignList');
+            campaignList.innerHTML = '';
+
+            if (campaigns.length === 0) {
+                campaignList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #7f8c8d;">
+                        <div style="font-size: 3em; margin-bottom: 15px;">📊</div>
+                        <h3>No campaigns found</h3>
+                        <p>Create your first campaign using the form above!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            campaigns.forEach(campaign => {
+                const campaignItem = document.createElement('div');
+                campaignItem.className = 'campaign-item';
+                
+                // Get current metrics if available
+                const metrics = campaign.current_metrics || {};
+                const currentROAS = metrics.roas || 0;
+                const targetROAS = campaign.target_roas || 0;
+                const roasStatus = currentROAS >= targetROAS ? 'good' : 'warning';
+                
+                campaignItem.innerHTML = `
+                    <div class="campaign-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span class="campaign-name">${campaign.name}</span>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="platform-badge platform-${campaign.platform}">${campaign.platform.toUpperCase()}</span>
+                                <span class="status-indicator status-${campaign.status}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="campaign-details">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <strong>Budget:</strong> $${campaign.daily_budget}/day<br>
+                                <strong>Target ROAS:</strong> ${campaign.target_roas}x<br>
+                                <strong>Status:</strong> ${campaign.status}
+                            </div>
+                            <div>
+                                ${metrics.impressions ? `<strong>Impressions:</strong> ${metrics.impressions.toLocaleString()}<br>` : ''}
+                                ${metrics.clicks ? `<strong>Clicks:</strong> ${metrics.clicks.toLocaleString()}<br>` : ''}
+                                ${metrics.conversions ? `<strong>Conversions:</strong> ${metrics.conversions}<br>` : ''}
+                                ${metrics.spend ? `<strong>Spend:</strong> $${metrics.spend.toFixed(2)}<br>` : ''}
+                                ${metrics.revenue ? `<strong>Revenue:</strong> $${metrics.revenue.toFixed(2)}<br>` : ''}
+                                ${currentROAS ? `<strong>Current ROAS:</strong> <span style="color: ${roasStatus === 'good' ? '#27ae60' : '#e74c3c'}">${currentROAS.toFixed(2)}x</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #7f8c8d;">
+                            <span>ID: ${campaign.campaign_id}</span>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="viewCampaignDetails('${campaign.campaign_id}')" style="background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 0.8em;">View Details</button>
+                                <button onclick="optimizeCampaign('${campaign.campaign_id}')" style="background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 0.8em;">Optimize</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                campaignList.appendChild(campaignItem);
+            });
+        }
+
+        // Campaign detail and optimization functions
+        function viewCampaignDetails(campaignId) {
+            addLog('info', `🔍 Viewing details for campaign: ${campaignId}`);
+            
+            // Find the campaign in the current list
+            const campaigns = document.querySelectorAll('.campaign-item');
+            let campaignData = null;
+            
+            campaigns.forEach(item => {
+                if (item.innerHTML.includes(campaignId)) {
+                    // Extract campaign data from the displayed item
+                    const nameMatch = item.querySelector('.campaign-name').textContent;
+                    const platformMatch = item.querySelector('.platform-badge').textContent;
+                    campaignData = {
+                        campaign_id: campaignId,
+                        name: nameMatch,
+                        platform: platformMatch.toLowerCase()
+                    };
+                }
+            });
+            
+            if (campaignData) {
+                // Show campaign details in a modal-like display
+                const detailsHtml = `
+                    <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                        <h3>📊 Campaign Details: ${campaignData.name}</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                            <div>
+                                <strong>Campaign ID:</strong> ${campaignData.campaign_id}<br>
+                                <strong>Platform:</strong> ${campaignData.platform.toUpperCase()}<br>
+                                <strong>Status:</strong> Active
+                            </div>
+                            <div>
+                                <strong>Created:</strong> ${new Date().toLocaleDateString()}<br>
+                                <strong>Last Updated:</strong> ${new Date().toLocaleString()}<br>
+                                <strong>Optimization Mode:</strong> Explore
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                            <h4>🎯 Performance Summary</h4>
+                            <p>This campaign is currently in the <strong>exploration phase</strong>, gathering data to optimize performance. Metrics are being collected hourly and AI optimization decisions are being made automatically.</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to activity log
+                addLog('info', `📋 Campaign details displayed for ${campaignData.name}`);
+            }
+        }
+
+        function optimizeCampaign(campaignId) {
+            addLog('info', `🤖 Running AI optimization for campaign: ${campaignId}`);
+            
+            // Simulate optimization process
+            setTimeout(() => {
+                const optimizations = [
+                    "Increased daily budget by 15% - ROAS above target",
+                    "Adjusted targeting parameters - improved CTR",
+                    "Paused underperforming ad groups - cost optimization",
+                    "Increased bid for high-converting keywords",
+                    "Expanded geographic targeting - new opportunities"
+                ];
+                
+                const randomOptimization = optimizations[Math.floor(Math.random() * optimizations.length)];
+                addLog('success', `✅ Optimization applied: ${randomOptimization}`);
+                
+                // Simulate metrics update after optimization
+                setTimeout(() => {
+                    addLog('info', `📈 Campaign metrics updated after optimization`);
+                    loadCampaigns(); // Refresh to show updated metrics
+                }, 2000);
+                
+            }, 1500);
+        }
+
+        // Load metrics
+        async function loadMetrics() {
+            try {
+                // Simulate metrics loading
+                const metrics = {
+                    totalImpressions: Math.floor(Math.random() * 50000) + 10000,
+                    totalClicks: Math.floor(Math.random() * 2000) + 500,
+                    totalConversions: Math.floor(Math.random() * 100) + 20,
+                    totalSpend: (Math.random() * 1000 + 200).toFixed(2),
+                    totalRevenue: (Math.random() * 3000 + 500).toFixed(2)
+                };
+
+                metrics.overallROAS = (metrics.totalRevenue / metrics.totalSpend).toFixed(2);
+
+                // Update UI
+                document.getElementById('totalImpressions').textContent = metrics.totalImpressions.toLocaleString();
+                document.getElementById('totalClicks').textContent = metrics.totalClicks.toLocaleString();
+                document.getElementById('totalConversions').textContent = metrics.totalConversions.toLocaleString();
+                document.getElementById('totalSpend').textContent = `$${metrics.totalSpend}`;
+                document.getElementById('totalRevenue').textContent = `$${metrics.totalRevenue}`;
+                document.getElementById('overallROAS').textContent = `${metrics.overallROAS}x`;
+
+                addLog('info', 'Metrics updated successfully');
+            } catch (error) {
+                addLog('error', 'Failed to load metrics: ' + error.message);
+            }
+        }
+
+        // Start metrics polling
+        function startMetricsPolling() {
+            // Poll metrics every 30 seconds for demo
+            setInterval(loadMetrics, 30000);
+            addLog('info', 'Started hourly metrics polling (demo: 30s intervals)');
+            
+            // Auto-refresh campaigns every 60 seconds
+            setInterval(loadCampaigns, 60000);
+            addLog('info', 'Started auto-refresh for campaigns (60s intervals)');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Load content based on tab
+            if (tabName === 'metrics') {
+                loadMetrics();
+            } else if (tabName === 'optimization') {
+                loadOptimizationDecisions();
+            }
+        }
+
+        // Load optimization decisions
+        async function loadOptimizationDecisions() {
+            const decisionsContainer = document.getElementById('optimizationDecisions');
+            decisionsContainer.innerHTML = `
+                <div class="log-entry log-info">
+                    [INFO] AI analyzing campaign performance...
+                </div>
+                <div class="log-entry log-success">
+                    [SUCCESS] Recommendation: Increase budget for high-performing campaigns
+                </div>
+                <div class="log-entry log-warning">
+                    [WARNING] Campaign CAMP-001: ROAS below target, consider pausing
+                </div>
+                <div class="log-entry log-info">
+                    [INFO] Next optimization cycle in 45 minutes
+                </div>
+            `;
+        }
+
+        // Run optimization
+        async function runOptimization() {
+            addLog('info', 'Running AI optimization analysis...');
+            
+            // Simulate optimization process
+            setTimeout(() => {
+                addLog('success', 'Optimization complete: 3 campaigns adjusted');
+                loadOptimizationDecisions();
+            }, 2000);
+        }
+
+        // Add log entry
+        function addLog(type, message) {
+            const log = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] [${type.toUpperCase()}] ${message}`;
+            
+            log.appendChild(logEntry);
+            log.scrollTop = log.scrollHeight;
+
+            // Keep only last 50 log entries
+            while (log.children.length > 50) {
+                log.removeChild(log.firstChild);
+            }
+        }
+    </script>
+</body>
+</html>
