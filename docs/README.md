@@ -51,28 +51,50 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ```
 ipop/
-├── app/                    # Main application code
-│   ├── api/v1/            # API endpoints
-│   ├── core/              # Configuration, database, security
-│   ├── models/            # Data models
-│   ├── intelligence/      # AI/ML optimization engines
-│   ├── platforms/         # Ad platform integrations
-│   ├── tasks/             # Background tasks
-│   └── main.py            # FastAPI entry point
-├── assets/                # Static assets (images, logos)
-├── demos/                 # Demo scripts and examples
-├── docs/                  # Documentation
-├── scripts/               # Utility scripts (auth, setup)
-├── tests/                 # Test suite
-├── web/                   # Web dashboard interface
-├── docker-compose.yml     # Docker configuration
-├── Dockerfile             # Container definition
-├── pytest.ini             # Test configuration
-├── README.md              # This file
-└── requirements.txt       # Python dependencies
+├── app/
+│   ├── api/
+│   │   ├── v1/
+│   │   │   ├── auth.py          # Authentication endpoints
+│   │   │   ├── clients.py       # Client management
+│   │   │   ├── skus.py          # SKU management
+│   │   │   ├── campaigns.py     # Campaign management
+│   │   │   ├── metrics.py       # Performance metrics
+│   │   │   └── intelligence.py  # Intelligence decisions
+│   ├── core/
+│   │   ├── config.py            # App configuration
+│   │   ├── security.py          # JWT & security utilities
+│   │   └── database.py          # MongoDB connection
+│   ├── models/
+│   │   ├── client.py            # Client model
+│   │   ├── sku.py               # SKU model
+│   │   ├── campaign.py          # Campaign model
+│   │   ├── metrics.py           # Metrics model
+│   │   └── benchmark.py         # Benchmark model
+│   ├── intelligence/
+│   │   ├── decision_engine.py   # Core decision logic
+│   │   ├── explore_exploit.py   # EXPLORE/EXPLOIT modes
+│   │   ├── thompson_sampling.py # Cold-start optimization
+│   │   └── portfolio_theory.py  # Portfolio optimization
+│   ├── integrators/
+│   │   ├── base.py              # Base integrator class
+│   │   ├── revealbot.py         # Revealbot integration
+│   │   ├── adroll.py            # AdRoll integration
+│   │   └── ...
+│   ├── platforms/
+│   │   ├── base.py              # Base platform class
+│   │   ├── google_ads.py        # Google Ads integration
+│   │   ├── meta.py              # Meta Ads integration
+│   │   ├── tiktok.py            # TikTok Ads integration
+│   │   └── linkedin.py          # LinkedIn Ads integration
+│   └── main.py                  # FastAPI application
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── conftest.py
+├── requirements.txt
+├── .env.example
+└── docker-compose.yml
 ```
-
-For detailed structure documentation, see `docs/PROJECT_STRUCTURE.md`.
 
 ## Development Phases
 

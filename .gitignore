@@ -82,3 +82,8 @@ secrets/
 *.pem
 *.key
 *.mp4
+
+# Temporary scripts
+reorganize.ps1
+cleanup_*.py
+temp_*.py
