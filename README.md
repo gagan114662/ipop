@@ -1,5 +1,3 @@
-cd New_Resize_Backend
-source venv/bin/activate  # or your activation command
 uvicorn app.main:app --reload
 
 
