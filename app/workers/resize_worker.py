@@ -333,6 +333,7 @@ import ffmpeg
 from app.config.database import AsyncSessionLocal
 from app.services.job_service import JobService
 from app.services.redis_service import RedisService
+from app.services.mongodb_service import MongoDBService
 from app.utils.platform_configs import get_platform_by_id
 from app.utils.exceptions import AppException
 from app.config.settings import settings
@@ -345,24 +346,24 @@ logger = logging.getLogger(__name__)
 
 class ResizeWorker:
     """Background worker for processing resize jobs"""
-    
+
     def __init__(self):
-        self.redis_service = RedisService()
+        self.mongodb_service = MongoDBService()  # Changed from redis_service
         self.running = False
         self.temp_dir = None
     
     async def start(self):
         """Start the worker"""
-        await self.redis_service.connect()
+        await self.mongodb_service.connect()  # Changed from redis_service
         self.running = True
         # Create temporary directory for processing
         self.temp_dir = Path(tempfile.mkdtemp(prefix="resize_worker_"))
         logger.info(f"Resize worker started with temp dir: {self.temp_dir}")
-        
+
         while self.running:
             try:
                 # Get next job from queue
-                job_data = await self.redis_service.get_job()
+                job_data = await self.mongodb_service.get_job()  # Changed from redis_service
                 
                 if job_data:
                     job_id = UUID(job_data['job_id'])
@@ -378,7 +379,7 @@ class ResizeWorker:
     async def stop(self):
         """Stop the worker"""
         self.running = False
-        await self.redis_service.disconnect()
+        await self.mongodb_service.disconnect()  # Changed from redis_service
         # Clean up temporary directory
         if self.temp_dir and self.temp_dir.exists():
             shutil.rmtree(self.temp_dir, ignore_errors=True)
@@ -730,17 +731,17 @@ worker = ResizeWorker()
 
 async def start_resize_job(job_id: UUID):
     """Add job to processing queue"""
-    redis_service = RedisService()
-    await redis_service.connect()
-    
+    mongodb_service = MongoDBService()  # Changed from RedisService
+    await mongodb_service.connect()
+
     try:
-        await redis_service.add_job({
+        await mongodb_service.add_job({  # Changed from redis_service
             'job_id': str(job_id),
             'timestamp': time.time()
         })
         logger.info(f"Job {job_id} added to processing queue")
     finally:
-        await redis_service.disconnect()
+        await mongodb_service.disconnect()  # Changed from redis_service
 
 
 async def start_worker():

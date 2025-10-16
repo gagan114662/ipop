@@ -12,6 +12,7 @@ from app.config.database import init_db
 from app.api.routes import upload, jobs, download
 
 from app.services.redis_service import RedisService
+from app.services.mongodb_service import MongoDBService
 from app.utils.exceptions import AppException
 import asyncio
 
@@ -29,11 +30,16 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("🚀 Starting Creative Resizer Backend...")
     await init_db()
-    
-    # Initialize Redis connection
-    redis_service = RedisService()
-    await redis_service.connect()
-    app.state.redis = redis_service
+
+    # Initialize MongoDB connection (replacing Redis)
+    mongodb_service = MongoDBService()
+    await mongodb_service.connect()
+    app.state.mongodb = mongodb_service
+
+    # Keep Redis for backward compatibility (optional, can be removed)
+    # redis_service = RedisService()
+    # await redis_service.connect()
+    # app.state.redis = redis_service
 
     # Preload HuggingFace pipeline in background
     try:
@@ -48,8 +54,10 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("🛑 Shutting down...")
-    if hasattr(app.state, 'redis'):
-        await app.state.redis.disconnect()
+    if hasattr(app.state, 'mongodb'):
+        await app.state.mongodb.disconnect()
+    # if hasattr(app.state, 'redis'):
+    #     await app.state.redis.disconnect()
     logger.info("👋 Application shutdown complete")
 
 

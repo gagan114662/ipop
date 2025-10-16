@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio import AsyncSession
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List
 import logging
 import mimetypes
@@ -24,7 +24,7 @@ router = APIRouter()
 async def upload_file(
     file: UploadFile = File(...),
     platforms: str = Form(...),  # JSON string of platform IDs
-    db: AsyncSession = Depends(get_db)
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Upload a file and create a resize job

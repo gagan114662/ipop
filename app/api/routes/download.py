@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Path, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
-from sqlalchemy.ext.asyncio import AsyncSession
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from uuid import UUID
 import os
 import logging
@@ -18,9 +18,9 @@ router = APIRouter()
 
 @router.get("/download/{job_id}/platform/{platform_id}")
 async def download_platform_file(
-    job_id: UUID = Path(..., description="Job ID"),
+    job_id: str = Path(..., description="Job ID"),
     platform_id: str = Path(..., description="Platform ID"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Download resized file for specific platform
@@ -94,8 +94,8 @@ async def download_platform_file(
 
 @router.get("/download/{job_id}/all")
 async def download_all_files(
-    job_id: UUID = Path(..., description="Job ID"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Download all resized files as ZIP archive
@@ -160,7 +160,7 @@ async def download_all_files(
         )
 
 
-async def _create_zip_file(job, job_id: UUID) -> str:
+async def _create_zip_file(job, job_id: str) -> str:
     """Create ZIP file containing all output files"""
     
     from app.config.settings import settings
@@ -201,8 +201,8 @@ async def _create_zip_file(job, job_id: UUID) -> str:
 
 @router.get("/download/{job_id}/info")
 async def get_download_info(
-    job_id: UUID = Path(..., description="Job ID"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Get download information for a job

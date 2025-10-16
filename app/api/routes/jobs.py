@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Path, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from uuid import UUID
 import logging
 
@@ -14,8 +14,8 @@ router = APIRouter()
 
 @router.get("/jobs/{job_id}", response_model=JobResponse)
 async def get_job(
-    job_id: UUID = Path(..., description="Job ID to retrieve"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID to retrieve"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Get job details by ID
@@ -50,8 +50,8 @@ async def get_job(
 
 @router.get("/jobs/{job_id}/status", response_model=JobStatusResponse)
 async def get_job_status(
-    job_id: UUID = Path(..., description="Job ID to check status"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID to check status"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Get job status and progress
@@ -131,8 +131,8 @@ async def get_job_status(
 
 @router.post("/jobs/{job_id}/cancel")
 async def cancel_job(
-    job_id: UUID = Path(..., description="Job ID to cancel"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID to cancel"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Cancel a pending or processing job
@@ -190,8 +190,8 @@ async def cancel_job(
 
 @router.post("/jobs/{job_id}/retry")
 async def retry_job(
-    job_id: UUID = Path(..., description="Job ID to retry"),
-    db: AsyncSession = Depends(get_db)
+    job_id: str = Path(..., description="Job ID to retry"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """
     Retry a failed job

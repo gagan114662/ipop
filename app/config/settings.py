@@ -15,16 +15,20 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000)
     
     # Security
-    SECRET_KEY: str = Field(...)
+    SECRET_KEY: str = Field(default="dev-secret-key-change-in-production")
     ALLOWED_HOSTS: List[str] = Field(default=["*"])
     
-    # Database
-    DATABASE_URL: str = Field(...)
+    # Database (PostgreSQL - DEPRECATED, using MongoDB now)
+    DATABASE_URL: Optional[str] = Field(default=None)
     DB_ECHO: bool = Field(default=False)
     
     # Redis
     REDIS_URL: str = Field(default="redis://localhost:6379")
     REDIS_DB: int = Field(default=0)
+
+    # MongoDB
+    MONGODB_URL: str = Field(default="mongodb://localhost:27017")
+    MONGODB_DB: str = Field(default="creative_resizer")
     
     # File Upload
     MAX_FILE_SIZE: int = Field(default=500 * 1024 * 1024)  # 500MB
@@ -42,7 +46,7 @@ class Settings(BaseSettings):
     FFMPEG_PATH: str = Field(default="ffmpeg")
 
     # Hugging Face
-    HF_TOKEN: str = Field(..., description="Hugging Face API token")
+    HF_TOKEN: str = Field(default="dummy-token", description="Hugging Face API token")
     HF_HOME: str = Field(default="/workspace/huggingface")
     HF_HUB_CACHE: str = Field(default="/workspace/huggingface")
     TRANSFORMERS_CACHE: str = Field(default="/workspace/huggingface")
@@ -59,12 +63,12 @@ class Settings(BaseSettings):
         Path(v).mkdir(parents=True, exist_ok=True)
         return v
     
-    @validator("DATABASE_URL")
-    def validate_database_url(cls, v):
-        """Validate database URL format"""
-        if not v.startswith(("postgresql://", "postgresql+asyncpg://")):
-            raise ValueError("DATABASE_URL must be a PostgreSQL URL")
-        return v
+    # @validator("DATABASE_URL")
+    # def validate_database_url(cls, v):
+    #     """Validate database URL format"""
+    #     if v and not v.startswith(("postgresql://", "postgresql+asyncpg://")):
+    #         raise ValueError("DATABASE_URL must be a PostgreSQL URL")
+    #     return v
     
     class Config:
         env_file = ".env"

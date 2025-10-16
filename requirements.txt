@@ -7,6 +7,8 @@ asyncpg
 alembic
 redis[hiredis]
 aioredis
+motor
+pymongo
 pillow
 opencv-python
 celery
