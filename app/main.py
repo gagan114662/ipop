@@ -66,10 +66,21 @@ async def shutdown_event():
     logger.info("🛑 Stopping background worker...")
     await stop_worker()
 
+
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Vite
+    "http://127.0.0.1:5173",
+    "*"  # ← use this only for testing
+]
+
+
 # Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_HOSTS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -130,25 +141,25 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Test DB endpoint
-@app.get("/test-db")
-async def test_db():
-    try:
-        await database.command("ping")
-        return {"status": "MongoDB connected!"}
-    except Exception as e:
-        return {"error": str(e)}
+# # Test DB endpoint
+# @app.get("/test-db")
+# async def test_db():
+#     try:
+#         await database.command("ping")
+#         return {"status": "MongoDB connected!"}
+#     except Exception as e:
+#         return {"error": str(e)}
 
 
-# Health check endpoint
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "version": "1.0.0",
-        "timestamp": time.time()
-    }
+# # Health check endpoint
+# @app.get("/health")
+# async def health_check():
+#     """Health check endpoint"""
+#     return {
+#         "status": "healthy",
+#         "version": "1.0.0",
+#         "timestamp": time.time()
+#     }
 
 
 @app.get("/")

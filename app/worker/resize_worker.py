@@ -196,60 +196,116 @@ class ResizeWorker:
             else:
                 return "mp4"
 
-    async def _resize_image(self, input_path: str, output_path: Path, platform_config):
-        """Resize image for platform specifications with improved error handling"""
+    # async def _resize_image(self, input_path: str, output_path: Path, platform_config):
+    #     """Resize image for platform specifications with improved error handling"""
 
+    #     try:
+    #         # Use temp file for processing to avoid corruption
+    #         temp_output = self.temp_dir / f"temp_{output_path.name}"
+
+    #         with Image.open(input_path) as img:
+    #             # Handle different color modes
+    #             original_mode = img.mode
+    #             if original_mode in ('RGBA', 'LA'):
+    #                 # Create white background for transparency
+    #                 background = Image.new('RGB', img.size, (255, 255, 255))
+    #                 if original_mode == 'RGBA':
+    #                     background.paste(img, mask=img.split()[-1])  # Use alpha channel as mask
+    #                 else:
+    #                     background.paste(img)
+    #                 img = background
+    #             elif original_mode not in ('RGB', 'L'):
+    #                 img = img.convert('RGB')
+
+    #             # Get target dimensions
+    #             target_width, target_height = platform_config.dimensions
+    #             original_width, original_height = img.size
+
+    #             logger.debug(f"Resizing image from {original_width}x{original_height} to {target_width}x{target_height}")
+
+    #             # Calculate scaling to fit target dimensions while maintaining aspect ratio
+    #             width_ratio = target_width / original_width
+    #             height_ratio = target_height / original_height
+    #             scale_ratio = min(width_ratio, height_ratio)
+
+    #             # Calculate new dimensions
+    #             new_width = max(1, int(original_width * scale_ratio))
+    #             new_height = max(1, int(original_height * scale_ratio))
+
+    #             # Resize image with high-quality resampling
+    #             resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+    #             # Create canvas with target dimensions
+    #             if output_path.suffix.lower() == '.png':
+    #                 canvas = Image.new('RGBA', (target_width, target_height), (255, 255, 255, 255))
+    #             else:
+    #                 canvas = Image.new('RGB', (target_width, target_height), (255, 255, 255))
+
+    #             # Center the resized image on canvas
+    #             x_offset = (target_width - new_width) // 2
+    #             y_offset = (target_height - new_height) // 2
+
+    #             if resized_img.mode == 'RGBA' and canvas.mode == 'RGBA':
+    #                 canvas.paste(resized_img, (x_offset, y_offset), resized_img)
+    #             else:
+    #                 canvas.paste(resized_img, (x_offset, y_offset))
+
+    #             # Save with appropriate format and quality
+    #             save_kwargs = {
+    #                 'optimize': True,
+    #                 'quality': platform_config.quality
+    #             }
+
+    #             if output_path.suffix.lower() == '.png':
+    #                 # For PNG, use compression level instead of quality
+    #                 save_kwargs.pop('quality')
+    #                 save_kwargs['compress_level'] = 6
+    #                 canvas.save(temp_output, 'PNG', **save_kwargs)
+    #             else:
+    #                 # For JPEG
+    #                 if canvas.mode != 'RGB':
+    #                     canvas = canvas.convert('RGB')
+    #                 canvas.save(temp_output, 'JPEG', **save_kwargs)
+
+    #             # Move temp file to final location
+    #             shutil.move(str(temp_output), str(output_path))
+
+    #             logger.info(f"Image resized: {original_width}x{original_height} -> {target_width}x{target_height}")
+
+    #     except Exception as e:
+    #         logger.error(f"Image resize failed for {input_path}: {e}")
+    #         # Clean up temp file if it exists
+    #         temp_output = self.temp_dir / f"temp_{output_path.name}"
+    #         if temp_output.exists():
+    #             temp_output.unlink()
+    #         raise
+
+
+    # In resize_worker.py - REPLACE the _resize_image method
+    async def _resize_image(self, input_path: str, output_path: Path, platform_config):
+        """Intelligent Creative Resizing with layout adaptation"""
         try:
-            # Use temp file for processing to avoid corruption
+            # Import our advanced layout system
+            from app.utils.layout_detector import layout_detector
+            from app.utils.layout_adapter import layout_adapter
+            import cv2
+            import numpy as np
+            
+            # Use temp file for processing
             temp_output = self.temp_dir / f"temp_{output_path.name}"
 
             with Image.open(input_path) as img:
-                # Handle different color modes
-                original_mode = img.mode
-                if original_mode in ('RGBA', 'LA'):
-                    # Create white background for transparency
-                    background = Image.new('RGB', img.size, (255, 255, 255))
-                    if original_mode == 'RGBA':
-                        background.paste(img, mask=img.split()[-1])  # Use alpha channel as mask
-                    else:
-                        background.paste(img)
-                    img = background
-                elif original_mode not in ('RGB', 'L'):
-                    img = img.convert('RGB')
-
-                # Get target dimensions
-                target_width, target_height = platform_config.dimensions
-                original_width, original_height = img.size
-
-                logger.debug(f"Resizing image from {original_width}x{original_height} to {target_width}x{target_height}")
-
-                # Calculate scaling to fit target dimensions while maintaining aspect ratio
-                width_ratio = target_width / original_width
-                height_ratio = target_height / original_height
-                scale_ratio = min(width_ratio, height_ratio)
-
-                # Calculate new dimensions
-                new_width = max(1, int(original_width * scale_ratio))
-                new_height = max(1, int(original_height * scale_ratio))
-
-                # Resize image with high-quality resampling
-                resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-
-                # Create canvas with target dimensions
-                if output_path.suffix.lower() == '.png':
-                    canvas = Image.new('RGBA', (target_width, target_height), (255, 255, 255, 255))
-                else:
-                    canvas = Image.new('RGB', (target_width, target_height), (255, 255, 255))
-
-                # Center the resized image on canvas
-                x_offset = (target_width - new_width) // 2
-                y_offset = (target_height - new_height) // 2
-
-                if resized_img.mode == 'RGBA' and canvas.mode == 'RGBA':
-                    canvas.paste(resized_img, (x_offset, y_offset), resized_img)
-                else:
-                    canvas.paste(resized_img, (x_offset, y_offset))
-
+                # Convert to OpenCV for processing
+                opencv_image = cv2.cvtColor(np.array(img.convert('RGB')), cv2.COLOR_RGB2BGR)
+                
+                # Detect layout elements
+                elements = layout_detector.detect_elements(opencv_image)
+                
+                logger.info(f"Detected {len(elements)} creative elements: {[e.type for e in elements]}")
+                
+                # Use intelligent layout adaptation
+                processed_img = layout_adapter.adapt_layout(img, elements, platform_config)
+                
                 # Save with appropriate format and quality
                 save_kwargs = {
                     'optimize': True,
@@ -257,27 +313,57 @@ class ResizeWorker:
                 }
 
                 if output_path.suffix.lower() == '.png':
-                    # For PNG, use compression level instead of quality
-                    save_kwargs.pop('quality')
+                    save_kwargs.pop('quality', None)
                     save_kwargs['compress_level'] = 6
-                    canvas.save(temp_output, 'PNG', **save_kwargs)
+                    processed_img.save(temp_output, 'PNG', **save_kwargs)
                 else:
-                    # For JPEG
-                    if canvas.mode != 'RGB':
-                        canvas = canvas.convert('RGB')
-                    canvas.save(temp_output, 'JPEG', **save_kwargs)
+                    if processed_img.mode != 'RGB':
+                        processed_img = processed_img.convert('RGB')
+                    processed_img.save(temp_output, 'JPEG', **save_kwargs)
 
-                # Move temp file to final location
+                # Move to final location
                 shutil.move(str(temp_output), str(output_path))
 
-                logger.info(f"Image resized: {original_width}x{original_height} -> {target_width}x{target_height}")
+            logger.info(f"Intelligently adapted creative for {platform_config.id}")
 
         except Exception as e:
-            logger.error(f"Image resize failed for {input_path}: {e}")
-            # Clean up temp file if it exists
+            logger.error(f"Creative adaptation failed for {input_path}: {e}")
+            # Fallback to basic resize
+            await self._basic_resize_fallback(input_path, output_path, platform_config)
+        
+    async def _basic_resize_fallback(self, input_path: str, output_path: Path, platform_config):
+        """Fallback to basic resizing if intelligent adaptation fails"""
+        try:
             temp_output = self.temp_dir / f"temp_{output_path.name}"
-            if temp_output.exists():
-                temp_output.unlink()
+
+            with Image.open(input_path) as img:
+                # Handle different color modes
+                if img.mode in ('RGBA', 'LA'):
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    if img.mode == 'RGBA':
+                        background.paste(img, mask=img.split()[-1])
+                    else:
+                        background.paste(img)
+                    img = background
+                elif img.mode not in ('RGB', 'L'):
+                    img = img.convert('RGB')
+
+                # Basic resize
+                img_resized = img.resize(platform_config.dimensions, Image.Resampling.LANCZOS)
+                
+                # Save
+                save_kwargs = {'optimize': True, 'quality': platform_config.quality}
+                if output_path.suffix.lower() == '.png':
+                    save_kwargs.pop('quality')
+                    save_kwargs['compress_level'] = 6
+                    img_resized.save(temp_output, 'PNG', **save_kwargs)
+                else:
+                    img_resized.save(temp_output, 'JPEG', **save_kwargs)
+
+                shutil.move(str(temp_output), str(output_path))
+                
+        except Exception as e:
+            logger.error(f"Fallback resize also failed: {e}")
             raise
 
     async def _resize_video(self, input_path: str, output_path: Path, platform_config):

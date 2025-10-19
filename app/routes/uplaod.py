@@ -19,7 +19,8 @@ router = APIRouter()
 @router.post("/upload", response_model=JobResponse)
 async def upload_file(
     file: UploadFile = File(...),
-    platforms: str = Form(...),  # JSON string of platform IDs
+    # platforms: str = Form(...),  # JSON string of platform IDs
+    platforms: List[str] = Form(...),
 ):
     """
     Upload a file and create a resize job
@@ -31,18 +32,28 @@ async def upload_file(
     """
     try:
         # Parse platforms
-        try:
-            platform_list = json.loads(platforms)
-            if not isinstance(platform_list, list) or not platform_list:
-                raise ValueError("Platforms must be a non-empty list")
-        except (json.JSONDecodeError, ValueError) as e:
+        print('platforms', platforms)
+        # try:
+        #     platform_list = json.loads(platforms)
+        #     if not isinstance(platform_list, list) or not platform_list:
+        #         raise ValueError("Platforms must be a non-empty list")
+        # except (json.JSONDecodeError, ValueError) as e:
+        #     raise AppException(
+        #         status_code=400,
+        #         error_code="INVALID_PLATFORMS",
+        #         message="Invalid platforms format"
+        #     )
+
+        # ✅ Validate platforms directly (no json.loads)
+        if not isinstance(platforms, list) or not platforms:
             raise AppException(
                 status_code=400,
                 error_code="INVALID_PLATFORMS",
-                message="Invalid platforms format"
+                message="Platforms must be a non-empty list"
             )
         
-        # Validate file
+        platform_list = platforms 
+            # Validate file
         await _validate_upload_file(file)
         
         # Determine content type
@@ -93,96 +104,96 @@ async def upload_file(
         )
 
 
-@router.get("/platforms")
-async def get_platforms():
-    """
-    Get available platforms with their specifications
+# @router.get("/platforms")
+# async def get_platforms():
+#     """
+#     Get available platforms with their specifications
     
-    Returns list of all available platforms with dimensions and supported content types
-    """
-    try:
-        from app.utils.platform_configs import PLATFORM_CONFIGS
+#     Returns list of all available platforms with dimensions and supported content types
+#     """
+#     try:
+#         from app.utils.platform_configs import PLATFORM_CONFIGS
         
-        platforms = []
-        for platform in PLATFORM_CONFIGS.values():
-            platforms.append({
-                "id": platform.id,
-                "name": platform.name,
-                "display_name": platform.display_name,
-                "dimensions": {
-                    "width": platform.dimensions[0],
-                    "height": platform.dimensions[1]
-                },
-                "content_type": platform.content_type.value,
-                "max_duration": platform.max_duration,
-                "format": f"{platform.dimensions[0]}x{platform.dimensions[1]}",
-                "icon_url": platform.icon_url
-            })
+#         platforms = []
+#         for platform in PLATFORM_CONFIGS.values():
+#             platforms.append({
+#                 "id": platform.id,
+#                 "name": platform.name,
+#                 "display_name": platform.display_name,
+#                 "dimensions": {
+#                     "width": platform.dimensions[0],
+#                     "height": platform.dimensions[1]
+#                 },
+#                 "content_type": platform.content_type.value,
+#                 "max_duration": platform.max_duration,
+#                 "format": f"{platform.dimensions[0]}x{platform.dimensions[1]}",
+#                 "icon_url": platform.icon_url
+#             })
         
-        return {
-            "platforms": platforms,
-            "total": len(platforms)
-        }
+#         return {
+#             "platforms": platforms,
+#             "total": len(platforms)
+#         }
         
-    except Exception as e:
-        logger.error(f"Failed to get platforms: {e}", exc_info=True)
-        raise AppException(
-            status_code=500,
-            error_code="PLATFORMS_FETCH_FAILED",
-            message="Failed to fetch platform configurations"
-        )
+#     except Exception as e:
+#         logger.error(f"Failed to get platforms: {e}", exc_info=True)
+#         raise AppException(
+#             status_code=500,
+#             error_code="PLATFORMS_FETCH_FAILED",
+#             message="Failed to fetch platform configurations"
+#         )
 
 
-@router.get("/platforms/compatible/{content_type}")
-async def get_compatible_platforms_endpoint(content_type: str):
-    """
-    Get platforms compatible with specific content type
+# @router.get("/platforms/compatible/{content_type}")
+# async def get_compatible_platforms_endpoint(content_type: str):
+#     """
+#     Get platforms compatible with specific content type
     
-    - **content_type**: 'image' or 'video'
+#     - **content_type**: 'image' or 'video'
     
-    Returns filtered list of compatible platforms
-    """
-    try:
-        if content_type not in ["image", "video"]:
-            raise AppException(
-                status_code=400,
-                error_code="INVALID_CONTENT_TYPE",
-                message="Content type must be 'image' or 'video'"
-            )
+#     Returns filtered list of compatible platforms
+#     """
+#     try:
+#         if content_type not in ["image", "video"]:
+#             raise AppException(
+#                 status_code=400,
+#                 error_code="INVALID_CONTENT_TYPE",
+#                 message="Content type must be 'image' or 'video'"
+#             )
         
-        compatible = get_compatible_platforms(content_type)
+#         compatible = get_compatible_platforms(content_type)
         
-        platforms = []
-        for platform in compatible:
-            platforms.append({
-                "id": platform.id,
-                "name": platform.name,
-                "display_name": platform.display_name,
-                "dimensions": {
-                    "width": platform.dimensions[0],
-                    "height": platform.dimensions[1]
-                },
-                "content_type": platform.content_type.value,
-                "max_duration": platform.max_duration,
-                "format": f"{platform.dimensions[0]}x{platform.dimensions[1]}",
-                "icon_url": platform.icon_url
-            })
+#         platforms = []
+#         for platform in compatible:
+#             platforms.append({
+#                 "id": platform.id,
+#                 "name": platform.name,
+#                 "display_name": platform.display_name,
+#                 "dimensions": {
+#                     "width": platform.dimensions[0],
+#                     "height": platform.dimensions[1]
+#                 },
+#                 "content_type": platform.content_type.value,
+#                 "max_duration": platform.max_duration,
+#                 "format": f"{platform.dimensions[0]}x{platform.dimensions[1]}",
+#                 "icon_url": platform.icon_url
+#             })
         
-        return {
-            "platforms": platforms,
-            "content_type": content_type,
-            "total": len(platforms)
-        }
+#         return {
+#             "platforms": platforms,
+#             "content_type": content_type,
+#             "total": len(platforms)
+#         }
         
-    except AppException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to get compatible platforms: {e}", exc_info=True)
-        raise AppException(
-            status_code=500,
-            error_code="COMPATIBLE_PLATFORMS_FAILED",
-            message="Failed to fetch compatible platforms"
-        )
+#     except AppException:
+#         raise
+#     except Exception as e:
+#         logger.error(f"Failed to get compatible platforms: {e}", exc_info=True)
+#         raise AppException(
+#             status_code=500,
+#             error_code="COMPATIBLE_PLATFORMS_FAILED",
+#             message="Failed to fetch compatible platforms"
+#         )
 
 
 async def _validate_upload_file(file: UploadFile):

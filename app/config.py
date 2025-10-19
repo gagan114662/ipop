@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     
     # File Upload
     MAX_FILE_SIZE: int = Field(default=500 * 1024 * 1024)  # 500MB
-    ALLOWED_IMAGE_EXTENSIONS: List[str] = Field(default=[".jpg", ".jpeg", ".png"])
+    ALLOWED_IMAGE_EXTENSIONS: List[str] = Field(default=[".jpg", ".jpeg", ".png", ".webp"])
     ALLOWED_VIDEO_EXTENSIONS: List[str] = Field(default=[".mp4", ".mov"])
     UPLOAD_DIR: str = Field(default="uploads")
     OUTPUT_DIR: str = Field(default="outputs")
@@ -45,6 +45,8 @@ class Settings(BaseSettings):
     
     # External APIs
     FFMPEG_PATH: str = Field(default="ffmpeg")
+
+
 
     class Config:
         env_file = ".env"
