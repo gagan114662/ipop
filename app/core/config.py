@@ -44,6 +44,21 @@ class Settings(BaseSettings):
     # Performance Thresholds
     API_RESPONSE_TIME_MAX_MS: int = 500
     INTELLIGENCE_DECISION_MAX_MS: int = 2000
+
+    # HTTP Client Timeouts (seconds)
+    HTTP_TIMEOUT_SECONDS: float = 30.0
+    PAGE_LOAD_TIMEOUT_MS: int = 30000
+
+    # API Versions
+    META_API_VERSION: str = "v18.0"
+    LINKEDIN_API_VERSION: str = "v2"
+    TIKTOK_API_VERSION: str = "v1.3"
+
+    # Time-based Lookback Periods (days)
+    METRICS_LOOKBACK_DAYS: int = 1
+    ANALYTICS_LOOKBACK_DAYS: int = 30
+    CREATIVE_HISTORY_DAYS: int = 14
+    TOKEN_REFRESH_BUFFER_MINUTES: int = 5
     
     # Intelligence Settings
     IMPRESSION_THRESHOLD: int = 1000

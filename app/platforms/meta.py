@@ -71,7 +71,7 @@ class MetaAdsClient:
             
             # Default date range
             if not start_date:
-                start_date = datetime.utcnow() - timedelta(days=1)
+                start_date = datetime.utcnow() - timedelta(days=settings.METRICS_LOOKBACK_DAYS)
             if not end_date:
                 end_date = datetime.utcnow()
             
@@ -299,7 +299,7 @@ class MetaAdsClient:
 
             # Default date range
             if not start_date:
-                start_date = datetime.utcnow() - timedelta(days=1)
+                start_date = datetime.utcnow() - timedelta(days=settings.METRICS_LOOKBACK_DAYS)
             if not end_date:
                 end_date = datetime.utcnow()
 

@@ -273,7 +273,7 @@ class CreativeOptimizer:
                 fatigue = await self.detect_creative_fatigue(
                     client_id=client_id,
                     creative_id=creative_id,
-                    days=14
+                    days=settings.CREATIVE_HISTORY_DAYS
                 )
 
                 if fatigue.get("fatigue_score", 0) >= 70:

@@ -52,47 +52,43 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 ipop/
 ├── app/
-│   ├── api/
-│   │   ├── v1/
-│   │   │   ├── auth.py          # Authentication endpoints
-│   │   │   ├── clients.py       # Client management
-│   │   │   ├── skus.py          # SKU management
-│   │   │   ├── campaigns.py     # Campaign management
-│   │   │   ├── metrics.py       # Performance metrics
-│   │   │   └── intelligence.py  # Intelligence decisions
-│   ├── core/
-│   │   ├── config.py            # App configuration
-│   │   ├── security.py          # JWT & security utilities
-│   │   └── database.py          # MongoDB connection
-│   ├── models/
-│   │   ├── client.py            # Client model
-│   │   ├── sku.py               # SKU model
-│   │   ├── campaign.py          # Campaign model
-│   │   ├── metrics.py           # Metrics model
-│   │   └── benchmark.py         # Benchmark model
-│   ├── intelligence/
-│   │   ├── decision_engine.py   # Core decision logic
-│   │   ├── explore_exploit.py   # EXPLORE/EXPLOIT modes
-│   │   ├── thompson_sampling.py # Cold-start optimization
-│   │   └── portfolio_theory.py  # Portfolio optimization
-│   ├── integrators/
-│   │   ├── base.py              # Base integrator class
-│   │   ├── revealbot.py         # Revealbot integration
-│   │   ├── adroll.py            # AdRoll integration
-│   │   └── ...
-│   ├── platforms/
-│   │   ├── base.py              # Base platform class
-│   │   ├── google_ads.py        # Google Ads integration
-│   │   ├── meta.py              # Meta Ads integration
-│   │   ├── tiktok.py            # TikTok Ads integration
-│   │   └── linkedin.py          # LinkedIn Ads integration
-│   └── main.py                  # FastAPI application
+│   ├── api/                     # REST API endpoints
+│   ├── autopilot/               # Campaign automation
+│   ├── core/                    # Configuration & security
+│   ├── creative_generation/     # AI-powered creative assets
+│   ├── design_research/         # Design intelligence
+│   ├── intelligence/            # Decision engine
+│   ├── integrators/             # Third-party platform integrators
+│   ├── meta_learning/           # Cross-client learning
+│   ├── models/                  # Database models
+│   ├── platforms/               # Ad platform integrations
+│   ├── strategy_engine/         # Strategic analysis (7 layers)
+│   │   └── analysis/
+│   │       ├── layer1_price_elasticity.py
+│   │       ├── layer2_category_archaeology.py
+│   │       ├── layer3_cultural_cartography.py
+│   │       ├── layer4_competitive_semiotics.py
+│   │       └── models.py
+│   └── main.py
+├── docs/
+│   ├── guides/                  # User guides & documentation
+│   │   ├── API_KEYS_GUIDE.md
+│   │   ├── DEPLOYMENT_GUIDE.md
+│   │   ├── QUICKSTART.md
+│   │   ├── SCRAPER_STATUS.md
+│   │   └── TESTING_GUIDE.md
+│   ├── analysis_outputs/        # Generated analysis reports
+│   └── LAYER4_UNIVERSAL_SCRIPT_VERIFICATION.md
+├── scripts/                     # Universal utility scripts
+│   ├── analyze_any_brand.py     # Multi-layer brand analyzer
+│   └── test_layer4_visual_analysis.py  # Layer 4 tester
 ├── tests/
 │   ├── unit/
 │   ├── integration/
 │   └── conftest.py
 ├── requirements.txt
 ├── .env.example
+├── IMPLEMENTATION_ROADMAP.md    # Development roadmap
 └── docker-compose.yml
 ```
 

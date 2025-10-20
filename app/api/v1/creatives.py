@@ -379,11 +379,11 @@ async def get_creative_metrics_timeseries(
             detail="Creative not found"
         )
 
-    # Default date range: last 30 days
+    # Default date range: configurable analytics lookback period
     if not end_date:
         end_date = datetime.utcnow()
     if not start_date:
-        start_date = end_date - timedelta(days=30)
+        start_date = end_date - timedelta(days=settings.ANALYTICS_LOOKBACK_DAYS)
 
     # Fetch metrics from creative_metrics collection
     query = {

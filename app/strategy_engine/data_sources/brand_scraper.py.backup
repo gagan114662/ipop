@@ -1,0 +1,456 @@
+"""Universal Brand Web Scraper
+
+Scrapes ANY website to extract brand information, content, images, and metadata.
+Works universally - no brand-specific logic.
+"""
+
+import logging
+import re
+from typing import Dict, List, Any, Optional
+from urllib.parse import urljoin, urlparse
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+import asyncio
+from html.parser import HTMLParser
+
+logger = logging.getLogger(__name__)
+
+
+class SimpleHTMLParser(HTMLParser):
+    """Simple HTML parser for extracting data without external dependencies."""
+
+    def __init__(self):
+        super().__init__()
+        self.title = ""
+        self.meta_tags = {}
+        self.images = []
+        self.links = []
+        self.text_content = []
+        self.headings = []
+        self.lists = []
+        self.current_tag = None
+        self.current_list = []
+
+    def handle_starttag(self, tag, attrs):
+        self.current_tag = tag
+        attrs_dict = dict(attrs)
+
+        if tag == "meta":
+            name = attrs_dict.get("name", attrs_dict.get("property", ""))
+            content = attrs_dict.get("content", "")
+            if name and content:
+                self.meta_tags[name] = content
+
+        elif tag == "img":
+            src = attrs_dict.get("src", attrs_dict.get("data-src", ""))
+            if src:
+                self.images.append(src)
+
+        elif tag == "a":
+            href = attrs_dict.get("href", "")
+            if href:
+                self.links.append(href)
+
+        elif tag in ["ul", "ol"]:
+            self.current_list = []
+
+        elif tag in ["h1", "h2", "h3", "h4", "h5", "h6"]:
+            self.current_tag = "heading"
+
+    def handle_endtag(self, tag):
+        if tag in ["ul", "ol"] and self.current_list:
+            self.lists.extend(self.current_list)
+            self.current_list = []
+        self.current_tag = None
+
+    def handle_data(self, data):
+        data = data.strip()
+        if not data:
+            return
+
+        if self.current_tag == "title":
+            self.title = data
+        elif self.current_tag == "heading":
+            self.headings.append(data)
+        elif self.current_tag == "li":
+            self.current_list.append(data)
+        elif self.current_tag not in ["script", "style", "nav", "footer", "header"]:
+            self.text_content.append(data)
+
+logger = logging.getLogger(__name__)
+
+
+class BrandScraper:
+    """Universal web scraper for brand data extraction."""
+
+    def __init__(self, timeout: int = 30):
+        """
+        Initialize scraper.
+
+        Args:
+            timeout: Request timeout in seconds
+        """
+        self.timeout = timeout
+        self.logger = logger
+
+    async def scrape_brand(self, brand_url: str) -> Dict[str, Any]:
+        """
+        Scrape complete brand data from any website.
+
+        Args:
+            brand_url: Brand website URL
+
+        Returns:
+            Dictionary with structured brand data
+
+        Raises:
+            ValueError: If URL is invalid
+            Exception: If scraping fails
+        """
+        # Validate URL
+        if not brand_url or not isinstance(brand_url, str):
+            raise ValueError("Invalid brand URL")
+
+        if not brand_url.startswith(("http://", "https://")):
+            raise ValueError("URL must start with http:// or https://")
+
+        self.logger.info(f"Scraping brand data from: {brand_url}")
+
+        try:
+            # Fetch page content
+            html_content = await self._fetch_page(brand_url)
+
+            # Parse with Simple HTMLParser
+            parser = SimpleHTMLParser()
+            parser.feed(html_content)
+
+            # Extract all data
+            brand_data = {
+                "name": self._extract_brand_name(parser, brand_url),
+                "url": brand_url,
+                "category": self._categorize_brand(parser),
+                "description": self._extract_description(parser),
+                "features": self._extract_features(parser),
+                "images": self._extract_images(parser, brand_url),
+                "content": self._extract_text_content(parser),
+                "metadata": self._extract_metadata(parser),
+                "links": self._extract_links(parser, brand_url),
+                "social_media": self._extract_social_media(parser)
+            }
+
+            self.logger.info(f"Successfully scraped {brand_url}")
+            return brand_data
+
+        except Exception as e:
+            self.logger.error(f"Failed to scrape {brand_url}: {str(e)}")
+            raise
+
+    async def _fetch_page(self, url: str) -> str:
+        """
+        Fetch HTML content from URL using urllib (no external dependencies).
+
+        Args:
+            url: Website URL
+
+        Returns:
+            HTML content as string
+        """
+        # Run blocking urllib in thread pool to keep async
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self._fetch_page_sync, url)
+
+    def _fetch_page_sync(self, url: str) -> str:
+        """Synchronous page fetch using urllib."""
+        request = Request(url, headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        })
+
+        try:
+            with urlopen(request, timeout=self.timeout) as response:
+                return response.read().decode('utf-8')
+        except HTTPError as e:
+            raise Exception(f"HTTP Error {e.code}: {e.reason}")
+        except URLError as e:
+            raise Exception(f"URL Error: {e.reason}")
+
+    def _extract_brand_name(self, parser: SimpleHTMLParser, url: str) -> str:
+        """
+        Extract brand name from page or URL.
+
+        Args:
+            parser: SimpleHTMLParser object
+            url: Brand URL
+
+        Returns:
+            Brand name
+        """
+        # Try meta og:site_name
+        og_site_name = parser.meta_tags.get("og:site_name")
+        if og_site_name:
+            return og_site_name
+
+        # Try title tag
+        if parser.title:
+            # Clean up title (remove " - tagline" etc)
+            name = parser.title.split("-")[0].split("|")[0].strip()
+            if name:
+                return name
+
+        # Fall back to domain name
+        domain = urlparse(url).netloc
+        # Remove www. and TLD
+        name = domain.replace("www.", "").split(".")[0]
+        # Capitalize and clean
+        return name.replace("-", " ").replace("_", " ").title()
+
+    def _extract_description(self, soup: BeautifulSoup) -> str:
+        """
+        Extract brand description from meta tags or content.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Brand description
+        """
+        # Try meta description
+        meta_desc = soup.find("meta", attrs={"name": "description"})
+        if meta_desc and meta_desc.get("content"):
+            return meta_desc["content"]
+
+        # Try og:description
+        og_desc = soup.find("meta", property="og:description")
+        if og_desc and og_desc.get("content"):
+            return og_desc["content"]
+
+        # Try first paragraph
+        first_p = soup.find("p")
+        if first_p and first_p.get_text():
+            return first_p.get_text().strip()[:300]
+
+        return "No description available"
+
+    def _categorize_brand(self, soup: BeautifulSoup) -> str:
+        """
+        Attempt to categorize the brand based on content.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Estimated category
+        """
+        text_content = soup.get_text().lower()
+
+        # Category keywords
+        categories = {
+            "e-commerce": ["shop", "buy", "cart", "product", "store"],
+            "saas": ["software", "platform", "api", "solution", "cloud"],
+            "agency": ["agency", "marketing", "creative", "design", "advertising"],
+            "consulting": ["consulting", "strategy", "advisory", "expert"],
+            "education": ["course", "learn", "training", "education", "teach"],
+            "healthcare": ["health", "medical", "doctor", "clinic", "wellness"],
+            "finance": ["finance", "investment", "banking", "insurance"],
+            "tech": ["technology", "tech", "innovation", "digital"],
+            "professional_services": ["service", "professional", "business"]
+        }
+
+        # Count matches
+        scores = {}
+        for category, keywords in categories.items():
+            score = sum(text_content.count(keyword) for keyword in keywords)
+            if score > 0:
+                scores[category] = score
+
+        # Return highest scoring category
+        if scores:
+            return max(scores, key=scores.get)
+
+        return "general_utility"
+
+    def _extract_features(self, soup: BeautifulSoup) -> List[str]:
+        """
+        Extract product/service features from content.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            List of features
+        """
+        features = []
+
+        # Look for feature sections (common patterns)
+        feature_sections = soup.find_all(["ul", "ol"], class_=re.compile(r"feature|benefit|service"))
+
+        for section in feature_sections[:5]:  # Limit to 5 sections
+            items = section.find_all("li")
+            for item in items[:10]:  # Limit to 10 items per section
+                text = item.get_text().strip()
+                if text and len(text) < 200:  # Reasonable feature length
+                    features.append(text)
+
+        # If no structured features found, extract from headings
+        if not features:
+            headings = soup.find_all(["h2", "h3", "h4"])
+            for heading in headings[:10]:
+                text = heading.get_text().strip()
+                if text and len(text) < 100:
+                    features.append(text)
+
+        return features[:15]  # Max 15 features
+
+    def _extract_images(self, soup: BeautifulSoup, base_url: str) -> List[str]:
+        """
+        Extract image URLs from page.
+
+        Args:
+            soup: BeautifulSoup object
+            base_url: Base URL for resolving relative URLs
+
+        Returns:
+            List of absolute image URLs
+        """
+        images = []
+
+        # Find all img tags
+        img_tags = soup.find_all("img")
+
+        for img in img_tags[:50]:  # Limit to 50 images
+            src = img.get("src") or img.get("data-src")
+            if src:
+                # Convert to absolute URL
+                absolute_url = urljoin(base_url, src)
+                # Filter out tiny images (icons, etc)
+                if not any(skip in absolute_url.lower() for skip in ["icon", "logo-small", "favicon"]):
+                    images.append(absolute_url)
+
+        return images[:20]  # Max 20 images
+
+    def _extract_text_content(self, soup: BeautifulSoup) -> str:
+        """
+        Extract main text content from page.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Clean text content
+        """
+        # Remove script and style elements
+        for script in soup(["script", "style", "nav", "footer", "header"]):
+            script.decompose()
+
+        # Get text
+        text = soup.get_text()
+
+        # Clean up whitespace
+        lines = (line.strip() for line in text.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        text = ' '.join(chunk for chunk in chunks if chunk)
+
+        return text[:5000]  # Limit to 5000 characters
+
+    def _extract_metadata(self, soup: BeautifulSoup) -> Dict[str, str]:
+        """
+        Extract SEO and meta information.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Dictionary of metadata
+        """
+        metadata = {}
+
+        # Title
+        title = soup.find("title")
+        if title:
+            metadata["title"] = title.string or ""
+
+        # Meta description
+        meta_desc = soup.find("meta", attrs={"name": "description"})
+        if meta_desc:
+            metadata["meta_description"] = meta_desc.get("content", "")
+
+        # Open Graph tags
+        og_tags = soup.find_all("meta", property=re.compile(r"^og:"))
+        for tag in og_tags:
+            prop = tag.get("property", "").replace("og:", "")
+            content = tag.get("content", "")
+            if prop and content:
+                metadata[f"og_{prop}"] = content
+
+        # Keywords
+        keywords = soup.find("meta", attrs={"name": "keywords"})
+        if keywords:
+            metadata["keywords"] = keywords.get("content", "")
+
+        return metadata
+
+    def _extract_links(self, soup: BeautifulSoup, base_url: str) -> Dict[str, List[str]]:
+        """
+        Extract internal and external links.
+
+        Args:
+            soup: BeautifulSoup object
+            base_url: Base URL for comparison
+
+        Returns:
+            Dictionary with internal and external links
+        """
+        base_domain = urlparse(base_url).netloc
+        internal = []
+        external = []
+
+        links = soup.find_all("a", href=True)
+
+        for link in links[:100]:  # Limit to 100 links
+            href = link["href"]
+            absolute_url = urljoin(base_url, href)
+
+            # Skip anchors and javascript
+            if absolute_url.startswith(("#", "javascript:", "mailto:")):
+                continue
+
+            # Check if internal or external
+            link_domain = urlparse(absolute_url).netloc
+            if link_domain == base_domain:
+                internal.append(absolute_url)
+            else:
+                external.append(absolute_url)
+
+        return {
+            "internal": list(set(internal))[:20],  # Dedupe, max 20
+            "external": list(set(external))[:20]
+        }
+
+    def _extract_social_media(self, soup: BeautifulSoup) -> Dict[str, Optional[str]]:
+        """
+        Extract social media profile links.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Dictionary of social media platforms and URLs
+        """
+        social_media = {
+            "facebook": None,
+            "twitter": None,
+            "instagram": None,
+            "linkedin": None,
+            "youtube": None,
+            "tiktok": None
+        }
+
+        links = soup.find_all("a", href=True)
+
+        for link in links:
+            href = link["href"].lower()
+
+            for platform in social_media.keys():
+                if platform in href and not social_media[platform]:
+                    social_media[platform] = link["href"]
+
+        return social_media

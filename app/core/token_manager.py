@@ -52,8 +52,8 @@ class TokenManager:
         refresh_token = token_doc.get("refresh_token")
         
         if expires_at:
-            # Refresh if expires within 5 minutes
-            if datetime.utcnow() + timedelta(minutes=5) >= expires_at:
+            # Refresh if expires within configured buffer time
+            if datetime.utcnow() + timedelta(minutes=settings.TOKEN_REFRESH_BUFFER_MINUTES) >= expires_at:
                 logger.info("token_needs_refresh", platform=platform)
                 
                 if refresh_token:
@@ -140,7 +140,7 @@ class TokenManager:
         """Refresh Meta long-lived token."""
         import httpx
         
-        url = "https://graph.facebook.com/v18.0/oauth/access_token"
+        url = f"https://graph.facebook.com/{settings.META_API_VERSION}/oauth/access_token"
         params = {
             "grant_type": "fb_exchange_token",
             "client_id": settings.META_APP_ID,
@@ -171,7 +171,7 @@ class TokenManager:
         """Refresh LinkedIn token."""
         import httpx
         
-        url = "https://www.linkedin.com/oauth/v2/accessToken"
+        url = f"https://www.linkedin.com/oauth/{settings.LINKEDIN_API_VERSION}/accessToken"
         data = {
             "grant_type": "refresh_token",
             "refresh_token": refresh_token,

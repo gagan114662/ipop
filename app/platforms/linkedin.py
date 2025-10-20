@@ -46,7 +46,7 @@ class LinkedInAdsClient:
             
             # Default date range
             if not start_date:
-                start_date = datetime.utcnow() - timedelta(days=1)
+                start_date = datetime.utcnow() - timedelta(days=settings.METRICS_LOOKBACK_DAYS)
             if not end_date:
                 end_date = datetime.utcnow()
             
@@ -77,7 +77,7 @@ class LinkedInAdsClient:
             
             # Make API request
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params=params, headers=headers, timeout=30.0)
+                response = await client.get(url, params=params, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -154,7 +154,7 @@ class LinkedInAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, headers=headers, timeout=30.0)
+                response = await client.get(url, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -201,7 +201,7 @@ class LinkedInAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
             
             logger.info(
@@ -239,7 +239,7 @@ class LinkedInAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
             
             logger.info("linkedin_ads_campaign_paused", campaign_id=campaign_id)
@@ -268,7 +268,7 @@ class LinkedInAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
             
             logger.info("linkedin_ads_campaign_activated", campaign_id=campaign_id)
@@ -326,7 +326,7 @@ class LinkedInAdsClient:
 
             # Default date range
             if not start_date:
-                start_date = datetime.utcnow() - timedelta(days=1)
+                start_date = datetime.utcnow() - timedelta(days=settings.METRICS_LOOKBACK_DAYS)
             if not end_date:
                 end_date = datetime.utcnow()
 
@@ -354,7 +354,7 @@ class LinkedInAdsClient:
 
             # Make API request
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params=params, headers=headers, timeout=30.0)
+                response = await client.get(url, params=params, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
 
@@ -511,7 +511,7 @@ class LinkedInAdsClient:
             }
 
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params=params, headers=headers, timeout=30.0)
+                response = await client.get(url, params=params, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
 

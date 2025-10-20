@@ -16,7 +16,7 @@ class TikTokAdsClient:
     
     def __init__(self):
         """Initialize TikTok Ads client."""
-        self.base_url = "https://business-api.tiktok.com/open_api/v1.3"
+        self.base_url = f"https://business-api.tiktok.com/open_api/{settings.TIKTOK_API_VERSION}"
         self.access_token = settings.TIKTOK_ACCESS_TOKEN
         self._initialized = False
     
@@ -45,7 +45,7 @@ class TikTokAdsClient:
             
             # Default date range
             if not start_date:
-                start_date = datetime.utcnow() - timedelta(days=1)
+                start_date = datetime.utcnow() - timedelta(days=settings.METRICS_LOOKBACK_DAYS)
             if not end_date:
                 end_date = datetime.utcnow()
             
@@ -88,7 +88,7 @@ class TikTokAdsClient:
             
             # Make API request
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -177,7 +177,7 @@ class TikTokAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params=payload, headers=headers, timeout=30.0)
+                response = await client.get(url, params=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -224,7 +224,7 @@ class TikTokAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -267,7 +267,7 @@ class TikTokAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
@@ -301,7 +301,7 @@ class TikTokAdsClient:
             }
             
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response = await client.post(url, json=payload, headers=headers, timeout=settings.HTTP_TIMEOUT_SECONDS)
                 response.raise_for_status()
                 data = response.json()
             
