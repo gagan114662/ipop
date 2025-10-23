@@ -15,5 +15,30 @@
         "y": 219
       }
     }
+  },
+  {
+    "id": "marketing-agency",
+    "config": {
+      "steps/process-brand.step.ts": {
+        "x": 350,
+        "y": 24
+      },
+      "steps/ingest-brand.step.ts": {
+        "x": 0,
+        "y": 0
+      },
+      "steps/health-check.step.ts": {
+        "x": 0,
+        "y": 224
+      },
+      "steps/get-campaign.step.ts": {
+        "x": 0,
+        "y": 448
+      },
+      "steps/campaign-complete.step.ts": {
+        "x": 700,
+        "y": 44
+      }
+    }
   }
 ]
