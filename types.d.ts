@@ -12,10 +12,10 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'IngestBrand': ApiRouteHandler<{ websiteUrl: string; brandName?: string }, ApiResponse<200, { campaignId: string; message: string; status: string }>, { topic: 'process-brand'; data: { campaignId: string; websiteUrl: string; brandName: string; timestamp: string } }>
     'ProcessBrand': EventHandler<{ campaignId: string; websiteUrl: string; brandName: string; timestamp: string }, { topic: 'campaign-complete'; data: { campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string } }>
-    'CampaignComplete': EventHandler<{ campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string }, never>
-    'GetCampaign': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { campaign?: unknown }> | ApiResponse<404, { error: string }>, never>
+    'IngestBrand': ApiRouteHandler<{ websiteUrl: string; brandName?: string }, ApiResponse<200, { campaignId: string; message: string; status: string }>, { topic: 'process-brand'; data: { campaignId: string; websiteUrl: string; brandName: string; timestamp: string } }>
     'HealthCheck': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { status: string; message: string; services: { openai: boolean; gemini: boolean } }>, never>
+    'GetCampaign': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { campaign?: unknown }> | ApiResponse<404, { error: string }>, never>
+    'CampaignComplete': EventHandler<{ campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string }, never>
   }
 }
