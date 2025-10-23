@@ -21,7 +21,11 @@
   "author": "Motia Template",
   "license": "MIT",
   "dependencies": {
+    "@google/genai": "^1.26.0",
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
     "motia": "^0.6.4-beta.130",
+    "openai": "^6.6.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

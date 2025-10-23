@@ -2,21 +2,17 @@
   {
     "id": "basic-tutorial",
     "config": {
-      "steps/api.step.ts": {
-        "x": 6,
-        "y": 161
-      },
-      "steps/notification.step.ts": {
-        "x": 892,
-        "y": 219
+      "steps/state-audit-cron.step.ts": {
+        "x": 388,
+        "y": 45
       },
       "steps/process-food-order.step.ts": {
         "x": 356,
         "y": 338
       },
-      "steps/state-audit-cron.step.ts": {
-        "x": 388,
-        "y": 45
+      "steps/notification.step.ts": {
+        "x": 892,
+        "y": 219
       }
     }
   }
