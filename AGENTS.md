@@ -249,28 +249,6 @@ Before creating any Motia components, always check:
 - Specific `.mdc` files in `agents/rules/motia/` for step-type patterns  
 - `agents/architecture/` files for system-level decisions
 
-## Common Patterns
-
-### Production Application Style
-- Multi-language workflows (TypeScript + Python + Ruby)
-- Real-time data streaming and live updates
-- Authentication with user sessions and JWT management
-- AI/ML integration for intelligent processing
-- Comprehensive monitoring and health checks
-- Event-driven architecture with proper error handling
-
-### Data Processing Pipeline
-1. API Step (JS/TS) - Receive and validate incoming data
-2. Event Step (Python) - Process with ML/AI or complex computations
-3. Event Step (JS/TS) - Format results and trigger notifications
-4. Stream updates for real-time UI synchronization
-
-### Background Job Processing
-1. API Step (JS/TS) - Queue job with parameters and metadata
-2. Event Step (Ruby) - Process job asynchronously with retry logic
-3. Cron Step - Clean up completed jobs and maintenance
-4. Notification Step - Send completion alerts and status updates
-
 ## Debugging Tips
 
 - Use `motia dev:debug` for verbose logging
