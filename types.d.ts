@@ -16,5 +16,6 @@ declare module 'motia' {
     'ProcessBrand': EventHandler<{ campaignId: string; websiteUrl: string; brandName: string; timestamp: string }, { topic: 'campaign-complete'; data: { campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string } }>
     'CampaignComplete': EventHandler<{ campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string }, never>
     'GetCampaign': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { campaign?: unknown }> | ApiResponse<404, { error: string }>, never>
+    'HealthCheck': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { status: string; message: string; services: { openai: boolean; gemini: boolean } }>, never>
   }
 }
