@@ -19,6 +19,17 @@ export async function generateProductCreative(
   format: 'social-post' | 'product-ad' | 'lifestyle-shot' | 'packaging-mockup',
   variationIndex: number
 ): Promise<GeneratedCreative> {
+  // Defensive fallback for missing campaign concepts
+  if (!strategy.campaignConcepts || strategy.campaignConcepts.length === 0) {
+    strategy.campaignConcepts = [{
+      name: 'Elevated Brand Campaign',
+      description: 'Modern, sophisticated brand elevation',
+      targetAudience: 'Modern consumers',
+      keyMessage: 'Premium quality and design',
+      visualDirection: 'Clean, modern, aspirational'
+    }];
+  }
+  
   const campaignConcept = strategy.campaignConcepts[variationIndex % strategy.campaignConcepts.length];
   
   let prompt = '';

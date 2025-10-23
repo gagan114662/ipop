@@ -82,13 +82,20 @@ export const handler: Handlers['ProcessBrand'] = async (input, { logger, state, 
 
     // Step 5: Generate creatives for each SKU
     logger.info('Step 5: Generating creatives for products');
-    const generatedCreatives = await generateCreativesForAllProducts(
-      products,
-      creativeStrategy,
-      ['social-post', 'product-ad'],
-      2 // 2 variations per format
-    );
-    logger.info('Creative generation complete', { creativesGenerated: generatedCreatives.length });
+    
+    // Only generate creatives if we have products and strategy
+    let generatedCreatives: any[] = [];
+    if (products.length > 0 && creativeStrategy) {
+      generatedCreatives = await generateCreativesForAllProducts(
+        products,
+        creativeStrategy,
+        ['social-post', 'product-ad'],
+        2 // 2 variations per format
+      );
+      logger.info('Creative generation complete', { creativesGenerated: generatedCreatives.length });
+    } else {
+      logger.warn('Skipping creative generation - no products or strategy available');
+    }
 
     campaign.generatedCreatives = generatedCreatives;
     campaign.status = 'completed';
