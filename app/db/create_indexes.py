@@ -91,6 +91,14 @@ async def create_indexes():
         await db.creative_tests.create_index([("status", 1), ("is_concluded", 1)])
         logger.info("indexes_created", collection="creative_tests")
 
+        # Platform tokens collection
+        await db.platform_tokens.create_index(
+            [("client_id", 1), ("platform", 1)],
+            unique=True
+        )
+        await db.platform_tokens.create_index("updated_at")
+        logger.info("indexes_created", collection="platform_tokens")
+
         logger.info("all_indexes_created_successfully")
         
     except Exception as e:
@@ -111,7 +119,8 @@ async def drop_indexes():
     try:
         collections = ["clients", "skus", "campaigns", "performance_metrics",
                       "intelligence_decisions", "system_benchmarks",
-                      "creatives", "creative_metrics", "creative_tests"]
+                      "creatives", "creative_metrics", "creative_tests",
+                      "platform_tokens"]
         
         for collection_name in collections:
             collection = db[collection_name]

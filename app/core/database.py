@@ -91,6 +91,13 @@ class Database:
             await cls.db.system_benchmarks.create_index("industry")
             await cls.db.system_benchmarks.create_index("timestamp")
 
+            # Platform tokens indexes
+            await cls.db.platform_tokens.create_index(
+                [("client_id", 1), ("platform", 1)],
+                unique=True
+            )
+            await cls.db.platform_tokens.create_index("updated_at")
+
             logger.info("database_indexes_created")
         except Exception as e:
             # Indexes may already exist, log and continue

@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     META_APP_ID: Optional[str] = None
     META_APP_SECRET: Optional[str] = None
     META_ACCESS_TOKEN: Optional[str] = None
+    META_OAUTH_SCOPES: List[str] = ["ads_read", "ads_management", "business_management"]
     
     TIKTOK_APP_ID: Optional[str] = None
     TIKTOK_SECRET: Optional[str] = None
@@ -73,6 +74,19 @@ class Settings(BaseSettings):
     LINKEDIN_CLIENT_ID: Optional[str] = None
     LINKEDIN_CLIENT_SECRET: Optional[str] = None
     LINKEDIN_ACCESS_TOKEN: Optional[str] = None
+    LINKEDIN_OAUTH_SCOPES: List[str] = [
+        "r_liteprofile",
+        "r_emailaddress",
+        "rw_ads",
+        "r_ads",
+        "r_organization_social",
+        "w_organization_social",
+        "offline_access"
+    ]
+    
+    GOOGLE_ADS_OAUTH_SCOPES: List[str] = [
+        "https://www.googleapis.com/auth/adwords"
+    ]
     
     # Integrator Keys
     REVEALBOT_API_KEY: Optional[str] = None
@@ -98,6 +112,9 @@ class Settings(BaseSettings):
     
     # Testing
     TEST_DATABASE_NAME: str = "ipop_test"
+
+    # Authentication
+    OAUTH_CALLBACK_BASE_URL: Optional[str] = None
     
     model_config = SettingsConfigDict(
         env_file=".env",
