@@ -303,11 +303,9 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 from enum import Enum
-import cv2
-from PIL import Image
-import numpy as np
-from pathlib import Path
-from ultralytics import YOLO  # YOLOv8 lightweight detector
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # =============================
@@ -557,6 +555,150 @@ PLATFORM_CONFIGS: Dict[str, PlatformSpec] = {
         format_preference=["jpg", "png"],
         quality=80,
         icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googleads.svg"
+    ),
+        # --- Facebook Image Variants ---
+    "facebook_feed_landscape": PlatformSpec(
+        id="facebook_feed_landscape",
+        name="facebook",
+        display_name="Facebook Feed (Landscape)",
+        dimensions=(1200, 630),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg"
+    ),
+    "facebook_feed_square": PlatformSpec(
+        id="facebook_feed_square",
+        name="facebook",
+        display_name="Facebook Feed (Square)",
+        dimensions=(1080, 1080),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg"
+    ),
+    "facebook_story_image": PlatformSpec(
+        id="facebook_story_image",
+        name="facebook",
+        display_name="Facebook Story (9:16)",
+        dimensions=(1080, 1920),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg"
+    ),
+    "facebook_right_column": PlatformSpec(
+        id="facebook_right_column",
+        name="facebook",
+        display_name="Facebook Right Column (Desktop)",
+        dimensions=(1200, 1200),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=85,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg"
+    ),
+    "facebook_marketplace": PlatformSpec(
+        id="facebook_marketplace",
+        name="facebook",
+        display_name="Facebook Marketplace (Listings)",
+        dimensions=(1200, 1200),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg"
+    ),
+        # --- LinkedIn Image Variants ---
+    "linkedin_feed_landscape": PlatformSpec(
+        id="linkedin_feed_landscape",
+        name="linkedin",
+        display_name="LinkedIn Feed (Sponsored Content)",
+        dimensions=(1200, 627),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg"
+    ),
+    "linkedin_feed_square": PlatformSpec(
+        id="linkedin_feed_square",
+        name="linkedin",
+        display_name="LinkedIn Feed (Square)",
+        dimensions=(1080, 1080),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg"
+    ),
+    "linkedin_story_image": PlatformSpec(
+        id="linkedin_story_image",
+        name="linkedin",
+        display_name="LinkedIn Story (9:16)",
+        dimensions=(1080, 1920),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=88,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg"
+    ),
+    "linkedin_message_ad_300x250": PlatformSpec(
+        id="linkedin_message_ad_300x250",
+        name="linkedin",
+        display_name="LinkedIn Conversation Ad (Content Banner)",
+        dimensions=(300, 250),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=85,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg"
+    ),
+        # --- Pinterest Image Variants ---
+    "pinterest_standard_pin": PlatformSpec(
+        id="pinterest_standard_pin",
+        name="pinterest",
+        display_name="Pinterest Standard Pin (2:3)",
+        dimensions=(1000, 1500),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=90,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg"
+    ),
+    "pinterest_square_pin": PlatformSpec(
+        id="pinterest_square_pin",
+        name="pinterest",
+        display_name="Pinterest Square Pin",
+        dimensions=(1000, 1000),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=90,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg"
+    ),
+    "pinterest_story_pin": PlatformSpec(
+        id="pinterest_story_pin",
+        name="pinterest",
+        display_name="Pinterest Story Pin (9:16)",
+        dimensions=(1080, 1920),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=90,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg"
+    ),
+        # --- Snapchat Image Variants ---
+    "snapchat_single_image": PlatformSpec(
+        id="snapchat_single_image",
+        name="snapchat",
+        display_name="Snapchat Single Image Ad (9:16)",
+        dimensions=(1080, 1920),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=90,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/snapchat.svg"
+    ),
+    "snapchat_story_image": PlatformSpec(
+        id="snapchat_story_image",
+        name="snapchat",
+        display_name="Snapchat Story Ad (9:16)",
+        dimensions=(1080, 1920),
+        content_type=ContentType.IMAGE,
+        format_preference=["jpg", "png"],
+        quality=90,
+        icon_url="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/snapchat.svg"
     ),
     "google_display_320x100": PlatformSpec(
         id="google_display_320x100",
@@ -836,143 +978,36 @@ def validate_platform_ids(platform_ids: List[str], content_type: str) -> List[st
                 key for key, p in PLATFORM_CONFIGS.items()
                 if p.name == "twitter" and p.content_type in (ContentType.IMAGE, ContentType.BOTH)
             ])
+        elif pid.lower() == "facebook":
+            expanded_ids.extend([
+                key for key, p in PLATFORM_CONFIGS.items()
+                if p.name == "facebook" and p.content_type in (ContentType.IMAGE, ContentType.BOTH)
+            ])
+        elif pid.lower() == "linkedin":
+            expanded_ids.extend([
+                key for key, p in PLATFORM_CONFIGS.items()
+                if p.name == "linkedin" and p.content_type in (ContentType.IMAGE, ContentType.BOTH)
+            ])
+        elif pid.lower() == "pinterest":
+            expanded_ids.extend([
+                key for key, p in PLATFORM_CONFIGS.items()
+                if p.name == "pinterest" and p.content_type in (ContentType.IMAGE, ContentType.BOTH)
+            ])
+        elif pid.lower() == "snapchat":
+            expanded_ids.extend([
+                key for key, p in PLATFORM_CONFIGS.items()
+                if p.name == "snapchat" and p.content_type in (ContentType.IMAGE, ContentType.BOTH)
+            ])
         else:
             expanded_ids.append(pid)
 
     valid_platforms = []
     compatible_platforms = get_compatible_platforms(content_type)
     compatible_ids = {p.id for p in compatible_platforms}
+    seen = set()
     for platform_id in expanded_ids:
-        if platform_id in compatible_ids:
+        if platform_id in compatible_ids and platform_id not in seen:
             valid_platforms.append(platform_id)
+            seen.add(platform_id)
 
     return valid_platforms
-
-
-# =============================
-# YOLO + IMAGE RESIZING LOGIC
-# =============================
-
-# Load YOLOv8 (downloads on first run)
-yolo_model = YOLO("yolov8n.pt")
-
-
-def detect_main_subject_yolo(image: np.ndarray) -> Optional[tuple]:
-    """Detect main subject using YOLOv8"""
-    results = yolo_model.predict(source=image, verbose=False)
-    if not results or not results[0].boxes:
-        return None
-
-    boxes = results[0].boxes.xyxy.cpu().numpy()
-    areas = [(x2 - x1) * (y2 - y1) for (x1, y1, x2, y2) in boxes]
-    best_idx = np.argmax(areas)
-    x1, y1, x2, y2 = boxes[best_idx]
-    center_x = int((x1 + x2) / 2)
-    center_y = int((y1 + y2) / 2)
-    w = int(x2 - x1)
-    h = int(y2 - y1)
-    return center_x, center_y, w, h
-
-
-
-
-def intelligent_resize_with_padding(
-    image: np.ndarray,
-    target_width: int,
-    target_height: int,
-    center: tuple = None
-) -> np.ndarray:
-    """
-    Resize image to fit target dimensions while keeping main subject centered.
-    Uses padding (letterbox/pillarbox) if aspect ratios differ.
-    """
-    img_height, img_width = image.shape[:2]
-    target_aspect = target_width / target_height
-    img_aspect = img_width / img_height
-
-    # Calculate scaling to fit within target
-    scale = min(target_width / img_width, target_height / img_height)
-    new_w = int(img_width * scale)
-    new_h = int(img_height * scale)
-
-    # Create blank canvas (black background)
-    canvas = np.zeros((target_height, target_width, 3), dtype=np.uint8)
-
-    # Calculate position to place resized image
-    if center:
-        # Try to center the subject
-        cx, cy = center
-        # Scale subject position
-        scaled_cx = int(cx * scale)
-        scaled_cy = int(cy * scale)
-
-        # Place image so subject is centered
-        x_offset = max(0, target_width // 2 - scaled_cx)
-        y_offset = max(0, target_height // 2 - scaled_cy)
-
-        # Ensure we don't go out of bounds
-        x_offset = min(x_offset, target_width - new_w)
-        y_offset = min(y_offset, target_height - new_h)
-    else:
-        # Center the whole image
-        x_offset = (target_width - new_w) // 2
-        y_offset = (target_height - new_h) // 2
-
-    # Resize image
-    resized = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
-
-    # Paste onto canvas
-    canvas[y_offset:y_offset+new_h, x_offset:x_offset+new_w] = resized
-
-    return canvas
-
-
-
-
-def resize_for_platforms(
-    input_image_path: str,
-    platform_ids: List[str],
-    content_type: str = "image",
-    output_dir: str = "outputs/"
-) -> Dict[str, str]:
-    """Resize image intelligently for all valid platforms using YOLO subject detection."""
-    valid_ids = validate_platform_ids(platform_ids, content_type)
-    if not valid_ids:
-        raise ValueError("No valid platforms for this content type.")
-
-    image = cv2.imread(input_image_path)
-    if image is None:
-        raise ValueError(f"Unable to load image: {input_image_path}")
-
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-    output_paths = {}
-
-    # Detect main subject
-    subject_center = detect_main_subject_yolo(image)
-    center_xy = (subject_center[0], subject_center[1]) if subject_center else None
-
-
-    for pid in valid_ids:
-        spec = get_platform_by_id(pid)
-        if not spec:
-            continue
-
-        # ✅ Use padding-aware resize
-        resized = intelligent_resize_with_padding(
-            image.copy(), 
-            spec.dimensions[0], 
-            spec.dimensions[1], 
-            center_xy  # This keeps subject centered
-        )
-
-        resized_rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
-        pil_img = Image.fromarray(resized_rgb)
-
-        format_pref = spec.format_preference[0]
-        output_filename = f"{Path(input_image_path).stem}_{spec.id}.{format_pref}"
-        output_path = f"{output_dir}/{output_filename}"
-        pil_img.save(output_path, format=format_pref.upper(), quality=spec.quality)
-        output_paths[pid] = output_path
-
-
-    return output_paths

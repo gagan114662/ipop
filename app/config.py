@@ -45,6 +45,11 @@ class Settings(BaseSettings):
     
     # External APIs
     FFMPEG_PATH: str = Field(default="ffmpeg")
+    OPENAI_API_KEY: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
+    OPENAI_VISION_MODEL: str = Field(default="gpt-4o-mini", env="OPENAI_VISION_MODEL")
+    OPENAI_BASE_URL: str = Field(default="https://api.openai.com/v1", env="OPENAI_BASE_URL")
+    VISION_AGENT_MAX_IMAGE_EDGE: int = Field(default=2048)
+    VISION_AGENT_TIMEOUT: int = Field(default=30)
 
 
 
@@ -56,4 +61,3 @@ class Settings(BaseSettings):
 
 # Create settings instance
 settings = Settings()
-

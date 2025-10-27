@@ -178,3 +178,10 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+# macOS
+.DS_Store
+
+# Test files
+test_*.py
+*_test.py

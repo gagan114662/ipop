@@ -12,6 +12,7 @@ import ffmpeg
 
 from app.services.job_service import JobService
 from app.services.redis_service import RedisService
+from app.services.openai_resizer import openai_resizer
 from app.utils.platform_configs import get_platform_by_id
 from app.utils.exceptions import AppException
 from app.config import settings
@@ -281,31 +282,37 @@ class ResizeWorker:
     #         raise
 
 
-    # In resize_worker.py - REPLACE the _resize_image method
     async def _resize_image(self, input_path: str, output_path: Path, platform_config):
-        """Intelligent Creative Resizing with layout adaptation"""
+        """Intelligently resize image using OpenAI Vision API"""
         try:
-            # Import our advanced layout system
-            from app.utils.layout_detector import layout_detector
-            from app.utils.layout_adapter import layout_adapter
-            import cv2
-            import numpy as np
-            
-            # Use temp file for processing
             temp_output = self.temp_dir / f"temp_{output_path.name}"
 
             with Image.open(input_path) as img:
-                # Convert to OpenCV for processing
-                opencv_image = cv2.cvtColor(np.array(img.convert('RGB')), cv2.COLOR_RGB2BGR)
-                
-                # Detect layout elements
-                elements = layout_detector.detect_elements(opencv_image)
-                
-                logger.info(f"Detected {len(elements)} creative elements: {[e.type for e in elements]}")
-                
-                # Use intelligent layout adaptation
-                processed_img = layout_adapter.adapt_layout(img, elements, platform_config)
-                
+                # Handle different color modes
+                original_mode = img.mode
+                if original_mode in ('RGBA', 'LA'):
+                    # Create white background for transparency
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    if original_mode == 'RGBA':
+                        background.paste(img, mask=img.split()[-1])
+                    else:
+                        background.paste(img)
+                    img = background
+                elif original_mode not in ('RGB', 'L'):
+                    img = img.convert('RGB')
+
+                # Get target dimensions
+                target_width, target_height = platform_config.dimensions
+                original_width, original_height = img.size
+
+                logger.info(f"Smart resizing: {original_width}x{original_height} → {target_width}x{target_height}")
+
+                # Use OpenAI intelligent resizing
+                resized_img = openai_resizer.resize_intelligently(
+                    img,
+                    (target_width, target_height)
+                )
+
                 # Save with appropriate format and quality
                 save_kwargs = {
                     'optimize': True,
@@ -313,57 +320,25 @@ class ResizeWorker:
                 }
 
                 if output_path.suffix.lower() == '.png':
-                    save_kwargs.pop('quality', None)
-                    save_kwargs['compress_level'] = 6
-                    processed_img.save(temp_output, 'PNG', **save_kwargs)
-                else:
-                    if processed_img.mode != 'RGB':
-                        processed_img = processed_img.convert('RGB')
-                    processed_img.save(temp_output, 'JPEG', **save_kwargs)
-
-                # Move to final location
-                shutil.move(str(temp_output), str(output_path))
-
-            logger.info(f"Intelligently adapted creative for {platform_config.id}")
-
-        except Exception as e:
-            logger.error(f"Creative adaptation failed for {input_path}: {e}")
-            # Fallback to basic resize
-            await self._basic_resize_fallback(input_path, output_path, platform_config)
-        
-    async def _basic_resize_fallback(self, input_path: str, output_path: Path, platform_config):
-        """Fallback to basic resizing if intelligent adaptation fails"""
-        try:
-            temp_output = self.temp_dir / f"temp_{output_path.name}"
-
-            with Image.open(input_path) as img:
-                # Handle different color modes
-                if img.mode in ('RGBA', 'LA'):
-                    background = Image.new('RGB', img.size, (255, 255, 255))
-                    if img.mode == 'RGBA':
-                        background.paste(img, mask=img.split()[-1])
-                    else:
-                        background.paste(img)
-                    img = background
-                elif img.mode not in ('RGB', 'L'):
-                    img = img.convert('RGB')
-
-                # Basic resize
-                img_resized = img.resize(platform_config.dimensions, Image.Resampling.LANCZOS)
-                
-                # Save
-                save_kwargs = {'optimize': True, 'quality': platform_config.quality}
-                if output_path.suffix.lower() == '.png':
                     save_kwargs.pop('quality')
                     save_kwargs['compress_level'] = 6
-                    img_resized.save(temp_output, 'PNG', **save_kwargs)
+                    resized_img.save(temp_output, 'PNG', **save_kwargs)
                 else:
-                    img_resized.save(temp_output, 'JPEG', **save_kwargs)
+                    if resized_img.mode != 'RGB':
+                        resized_img = resized_img.convert('RGB')
+                    resized_img.save(temp_output, 'JPEG', **save_kwargs)
 
+                # Move temp file to final location
                 shutil.move(str(temp_output), str(output_path))
-                
+
+                logger.info(f"✓ Intelligent resize completed for {platform_config.display_name}")
+
         except Exception as e:
-            logger.error(f"Fallback resize also failed: {e}")
+            logger.error(f"Image resize failed for {input_path}: {e}")
+            # Clean up temp file if it exists
+            temp_output = self.temp_dir / f"temp_{output_path.name}"
+            if temp_output.exists():
+                temp_output.unlink()
             raise
 
     async def _resize_video(self, input_path: str, output_path: Path, platform_config):

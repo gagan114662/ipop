@@ -18,6 +18,8 @@ motor==3.7.1
 moviepy==1.0.3
 numpy==2.3.4
 pillow==11.3.0
+opencv-python-headless==4.10.0.84
+pytesseract==0.3.13
 proglog==0.1.12
 pydantic==2.12.2
 pydantic-settings==2.11.0
@@ -34,3 +36,4 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.5.0
 uvicorn==0.37.0
+openai==1.58.1
