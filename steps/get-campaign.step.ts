@@ -22,8 +22,19 @@ export const config: ApiRouteConfig = {
 };
 
 export const handler: Handlers['GetCampaign'] = async (req: any, { logger, state }: any) => {
-  const campaignId = req.params.campaignId;
-  
+  const params = req?.params ?? req?.pathParams ?? {};
+  const campaignId = params?.campaignId;
+
+  if (!campaignId) {
+    logger.warn('Campaign lookup missing campaignId param');
+    return {
+      status: 404,
+      body: {
+        error: 'campaignId parameter is required',
+      },
+    };
+  }
+
   logger.info('Retrieving campaign', { campaignId });
 
   const campaign = await state.get('campaigns', campaignId);

@@ -1,0 +1,149 @@
+[
+  {
+    "index": 1,
+    "sku": "AUTO_1",
+    "name": "Tree Dasher 2",
+    "url": "https://www.allbirds.com/products/mens-tree-dashers",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/AA000QM_SHOE_LEFT_GLOBAL_MENS_TREE_DASHER_2.0_Blizzard_Blizzard.png?v=1751060717"
+  },
+  {
+    "index": 2,
+    "sku": "AUTO_2",
+    "name": "Wool Cruiser",
+    "url": "https://www.allbirds.com/products/mens-wool-cruiser-dark-camel",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11631_25Q3_Wool-Cruiser-Dark-Camel-Natural-White-Sole_PDP_LEFT__1_bec494cd-90bc-4d1a-b180-cd8a56464781.png?v=1756335125"
+  },
+  {
+    "index": 3,
+    "sku": "AUTO_3",
+    "name": "Tree Runner",
+    "url": "https://www.allbirds.com/products/mens-tree-runners",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/TR2MNNT_SHOE_LEFT_GLOBAL_MENS_TREE_RUNNER_NAVY_NIGHT_DARK_NAVY.png?v=1751166594"
+  },
+  {
+    "index": 4,
+    "sku": "AUTO_4",
+    "name": "Wool Runner NZ",
+    "url": "https://www.allbirds.com/products/mens-wool-runner-nz",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A12012_25Q3_Wool-Runner-NZ-Dark-Grey-Light-Grey-Sole_PDP_LEFT__1.png?v=1754512329"
+  },
+  {
+    "index": 5,
+    "sku": "AUTO_5",
+    "name": "Tree Runner NZ",
+    "url": "https://www.allbirds.com/products/mens-tree-runner-nz-medium-grey?_pos=12&_fid=2213e5f0c&_ss=c",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11959_25Q3_Tree_Runner_NZ_Medium_Grey_Blizzard_Sole_PDP_LEFT-2000x2000.png?v=1751898984"
+  },
+  {
+    "index": 6,
+    "sku": "AUTO_6",
+    "name": "Gift Cards",
+    "url": "https://www.allbirds.com/products/digital-gift-cards",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/Q424_Gifting_Site_PDP_GiftCard_1600x1600_3cbf0651-7406-4a93-910a-551a042bfe4f.png?v=1730312896"
+  },
+  {
+    "index": 7,
+    "sku": "AUTO_7",
+    "name": "No Show",
+    "url": "https://www.allbirds.com/products/anytime-no-show-sock-deep-navy",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11166_24Q4_Anytime_No_Show_Sock_Deep_Navy_A-2000x2000.png?v=1727375436"
+  },
+  {
+    "index": 8,
+    "sku": "AUTO_8",
+    "name": "Ankle",
+    "url": "https://www.allbirds.com/products/anytime-ankle-sock",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/products/SKU-SOCKS-GLOBAL-ANKLE-BLIZZARD-1_Resize_0004_SKU-SOCKS-GLOBAL-ANKLE-NATURAL-BLACK-1-min.png?v=1676567814"
+  },
+  {
+    "index": 9,
+    "sku": "AUTO_9",
+    "name": "Crew",
+    "url": "https://www.allbirds.com/products/anytime-crew-sock-natural-black",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/products/STIUWE_SOCKS_WHEAT_FRONT_Resize_0001_SKU-SOCKS-GLOBAL-CREW-NATURAL-BLACK-1-min.png?v=1676567942"
+  },
+  {
+    "index": 10,
+    "sku": "AUTO_10",
+    "name": "Wool Cruiser",
+    "url": "https://www.allbirds.com/products/womens-wool-cruiser-burgundy",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11610_25Q3_Wool-Cruiser-Burgundy-Natural-White-Sole_PDP_LEFT__1_bf1784e3-e5b6-42d5-a127-847e2427f125.png?v=1756334780"
+  },
+  {
+    "index": 11,
+    "sku": "AUTO_11",
+    "name": "Tree Breezer",
+    "url": "https://www.allbirds.com/products/womens-tree-breezers-jet-black",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/TB1WJBK_SHOE_LEFT_GLOBAL_WOMENS_TREE_BREEZER_JET_BLACK_BLACK.png?v=1751060487"
+  },
+  {
+    "index": 12,
+    "sku": "AUTO_12",
+    "name": "Tree Glider",
+    "url": "https://www.allbirds.com/products/womens-tree-gliders",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11070_24Q2_Tree-Glider-Natural-White-Blizzard_PDP_LEFT__1_12d49ca8-3cd6-4455-923e-1d1cc7ca72ae.png?v=1756486808"
+  },
+  {
+    "index": 13,
+    "sku": "AUTO_13",
+    "name": "Tree Dasher 2",
+    "url": "https://www.allbirds.com/products/womens-tree-dashers",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/AA000QM_SHOE_LEFT_GLOBAL_MENS_TREE_DASHER_2.0_Blizzard_Blizzard_b3f41d6d-4f4b-48d8-b28e-a0339e8342b7.png?v=1751060757"
+  },
+  {
+    "index": 14,
+    "sku": "AUTO_14",
+    "name": "Tree Runner",
+    "url": "https://www.allbirds.com/products/womens-tree-runners",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/TR3MMST080_SHOE_LEFT_GLOBAL_MENS_TREE_RUNNER_MIST_WHITE.png?v=1751166581"
+  },
+  {
+    "index": 15,
+    "sku": "AUTO_15",
+    "name": "Canvas Piper",
+    "url": "https://www.allbirds.com/products/womens-canvas-pipers-natural-white-hanami-night",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11516_25Q1_Canvas_Piper_Natural_White_Hanami_Night_Blizzard_PDP_LEFT-2000x2000_480fe0c9-2aa1-43f9-80b8-34eeb40f46dc.png?v=1750968054"
+  },
+  {
+    "index": 16,
+    "sku": "AUTO_17",
+    "name": "No Show",
+    "url": "https://www.allbirds.com/products/anytime-no-show-sock-blizzard",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/SKU-SOCKS-GLOBAL-ANKLE-BLIZZARD-1_Resize_0002_SKU-SOCKS-GLOBAL-NOSHOW-BLIZZARD-1-min.png?v=1761253089"
+  },
+  {
+    "index": 17,
+    "sku": "AUTO_20",
+    "name": "OUR CUSHIEST SLIPPER EVER",
+    "url": "https://www.allbirds.com/products/allbirds-slipper",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A12022_25Q4_Wool-Slipper-Light-Tan-Light-Tan-Sole_PDP_LEFT.png?v=1759335798"
+  },
+  {
+    "index": 18,
+    "sku": "AUTO_43",
+    "name": "Shop Men",
+    "url": "https://www.allbirds.com/products/mens-kiwi-clog",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A12147_25Q4_Kiwi-Clog-Dark-Camel-Stony-Cream-Sole_PDP_LEFT.png?v=1761687788"
+  },
+  {
+    "index": 19,
+    "sku": "AUTO_44",
+    "name": "Shop Women",
+    "url": "https://www.allbirds.com/products/womens-kiwi-clog",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A12147_25Q4_Kiwi-Clog-Dark-Camel-Stony-Cream-Sole_PDP_LEFT_bd7c1a74-a561-4b72-9ea1-3c9f425b8d3d.png?v=1761687828"
+  },
+  {
+    "index": 20,
+    "sku": "AUTO_45",
+    "name": "Women's Lounger Lift Velvet",
+    "url": "https://www.allbirds.com/products/womens-lounger-lift-velvet",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11863_25Q4_Lounger-Lift-Velvet-Sienna-Blush-Blizzard-Sole_PDP_LEFT.png?v=1761770613"
+  },
+  {
+    "index": 21,
+    "sku": "AUTO_49",
+    "name": "Men's Wool Cruiser Mid Select",
+    "url": "https://www.allbirds.com/products/mens-wool-cruiser-mid-select",
+    "imageUrl": "https://www.allbirds.com/cdn/shop/files/A11769_25Q4_Wool-Cruiser-Mid-Select-Natural-Black-Gum-Sole_PDP_LEFT.png?v=1761691270"
+  }
+]

@@ -1,0 +1,645 @@
+{
+  "default:UJY4Q-6332486": {
+    "id": "UJY4Q-6332486",
+    "name": "GetCampaign",
+    "lastActivity": 1761496332766,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496332486,
+    "endTime": 1761496332811
+  },
+  "default:4YFKZ-6347892": {
+    "id": "4YFKZ-6347892",
+    "name": "GetCampaign",
+    "lastActivity": 1761496348188,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496347892,
+    "endTime": 1761496348259
+  },
+  "default:75DP6-6363362": {
+    "id": "75DP6-6363362",
+    "name": "GetCampaign",
+    "lastActivity": 1761496363641,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496363362,
+    "endTime": 1761496363687
+  },
+  "default:8MZZ9-6378770": {
+    "id": "8MZZ9-6378770",
+    "name": "GetCampaign",
+    "lastActivity": 1761496379058,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496378770,
+    "endTime": 1761496379128
+  },
+  "default:DWZSY-6394223": {
+    "id": "DWZSY-6394223",
+    "name": "GetCampaign",
+    "lastActivity": 1761496394508,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496394223,
+    "endTime": 1761496394558
+  },
+  "default:DPMFB-6409638": {
+    "id": "DPMFB-6409638",
+    "name": "GetCampaign",
+    "lastActivity": 1761496409923,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496409638,
+    "endTime": 1761496409971
+  },
+  "default:6YN2F-6425070": {
+    "id": "6YN2F-6425070",
+    "name": "GetCampaign",
+    "lastActivity": 1761496425354,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496425070,
+    "endTime": 1761496425411
+  },
+  "default:4SKQE-6440494": {
+    "id": "4SKQE-6440494",
+    "name": "GetCampaign",
+    "lastActivity": 1761496440778,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761496440494,
+    "endTime": 1761496440826
+  },
+  "default:2M3U8-8501981": {
+    "id": "2M3U8-8501981",
+    "name": "HealthCheck",
+    "lastActivity": 1761498502303,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761498501981,
+    "endTime": 1761498502312
+  },
+  "default:EKBZT-8502335": {
+    "id": "EKBZT-8502335",
+    "name": "IngestBrand",
+    "lastActivity": 1761498503623,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1761498502335
+  },
+  "default:R4HFZ-8517769": {
+    "id": "R4HFZ-8517769",
+    "name": "GetCampaign",
+    "lastActivity": 1761498518072,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761498517769,
+    "endTime": 1761498518124
+  },
+  "default:54QHH-8746365": {
+    "id": "54QHH-8746365",
+    "name": "HealthCheck",
+    "lastActivity": 1761498746969,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761498746366,
+    "endTime": 1761498746983
+  },
+  "default:U5T88-8747029": {
+    "id": "U5T88-8747029",
+    "name": "IngestBrand",
+    "lastActivity": 1761498770700,
+    "metadata": {
+      "completedSteps": 2,
+      "activeSteps": 0,
+      "totalSteps": 2
+    },
+    "status": "failed",
+    "startTime": 1761498747030,
+    "endTime": 1761498770901
+  },
+  "default:6F31R-8762804": {
+    "id": "6F31R-8762804",
+    "name": "GetCampaign",
+    "lastActivity": 1761498764033,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761498762804,
+    "endTime": 1761498764097
+  },
+  "default:T5QGQ-2075904": {
+    "id": "T5QGQ-2075904",
+    "name": "HealthCheck",
+    "lastActivity": 1761502080299,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502075904,
+    "endTime": 1761502080316
+  },
+  "default:P6TTZ-2080378": {
+    "id": "P6TTZ-2080378",
+    "name": "IngestBrand",
+    "lastActivity": 1761502095710,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1761502080378
+  },
+  "default:EGV59-2099351": {
+    "id": "EGV59-2099351",
+    "name": "GetCampaign",
+    "lastActivity": 1761502104226,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502099352,
+    "endTime": 1761502104299
+  },
+  "default:6B7EW-2119958": {
+    "id": "6B7EW-2119958",
+    "name": "GetCampaign",
+    "lastActivity": 1761502126064,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502119959,
+    "endTime": 1761502126198
+  },
+  "default:Q57T8-2568238": {
+    "id": "Q57T8-2568238",
+    "name": "HealthCheck",
+    "lastActivity": 1761502569639,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502568239,
+    "endTime": 1761502569661
+  },
+  "default:772YB-2569743": {
+    "id": "772YB-2569743",
+    "name": "IngestBrand",
+    "lastActivity": 1761502620203,
+    "metadata": {
+      "completedSteps": 2,
+      "activeSteps": 0,
+      "totalSteps": 2
+    },
+    "status": "failed",
+    "startTime": 1761502569743,
+    "endTime": 1761502620623
+  },
+  "default:BDJ6T-2586556": {
+    "id": "BDJ6T-2586556",
+    "name": "GetCampaign",
+    "lastActivity": 1761502590524,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502586556,
+    "endTime": 1761502590609
+  },
+  "default:RFCN6-2606222": {
+    "id": "RFCN6-2606222",
+    "name": "GetCampaign",
+    "lastActivity": 1761502609552,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502606222,
+    "endTime": 1761502609825
+  },
+  "default:XZB7U-2625394": {
+    "id": "XZB7U-2625394",
+    "name": "GetCampaign",
+    "lastActivity": 1761502625394,
+    "metadata": {
+      "completedSteps": 0,
+      "activeSteps": 1,
+      "totalSteps": 1
+    },
+    "status": "running",
+    "startTime": 1761502625394
+  },
+  "default:D3UH4-2861012": {
+    "id": "D3UH4-2861012",
+    "name": "HealthCheck",
+    "lastActivity": 1761502862449,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502861013,
+    "endTime": 1761502862483
+  },
+  "default:KDP2C-2862585": {
+    "id": "KDP2C-2862585",
+    "name": "IngestBrand",
+    "lastActivity": 1761502868678,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1761502862585
+  },
+  "default:BA4JF-2879432": {
+    "id": "BA4JF-2879432",
+    "name": "GetCampaign",
+    "lastActivity": 1761502882436,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761502879433,
+    "endTime": 1761502882672
+  },
+  "default:ZYVQP-3075095": {
+    "id": "ZYVQP-3075095",
+    "name": "HealthCheck",
+    "lastActivity": 1761503077270,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761503075095,
+    "endTime": 1761503077287
+  },
+  "default:7MHVF-3147341": {
+    "id": "7MHVF-3147341",
+    "name": "GetCampaign",
+    "lastActivity": 1761503150638,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761503147341,
+    "endTime": 1761503150940
+  },
+  "default:ZU7M1-3187324": {
+    "id": "ZU7M1-3187324",
+    "name": "IngestBrand",
+    "lastActivity": 1761503216598,
+    "metadata": {
+      "completedSteps": 2,
+      "activeSteps": 0,
+      "totalSteps": 2
+    },
+    "status": "failed",
+    "startTime": 1761503187324,
+    "endTime": 1761503217161
+  },
+  "default:YEQYJ-3222821": {
+    "id": "YEQYJ-3222821",
+    "name": "GetCampaign",
+    "lastActivity": 1761503224303,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761503222821,
+    "endTime": 1761503224433
+  },
+  "default:55KGB-5090637": {
+    "id": "55KGB-5090637",
+    "name": "IngestBrand",
+    "lastActivity": 1761505203750,
+    "metadata": {
+      "completedSteps": 2,
+      "activeSteps": 0,
+      "totalSteps": 2
+    },
+    "status": "failed",
+    "startTime": 1761505090637,
+    "endTime": 1761505204981
+  },
+  "default:PRRTU-5322807": {
+    "id": "PRRTU-5322807",
+    "name": "IngestBrand",
+    "lastActivity": 1761505411131,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1761505322808
+  },
+  "default:SM1W1-5757348": {
+    "id": "SM1W1-5757348",
+    "name": "GetCampaign",
+    "lastActivity": 1761505765866,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761505757349,
+    "endTime": 1761505766822
+  },
+  "default:HR3F8-6290114": {
+    "id": "HR3F8-6290114",
+    "name": "IngestBrand",
+    "lastActivity": 1761506802595,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1761506290114,
+    "endTime": 1761506802619
+  },
+  "default:BQARS-7018764": {
+    "id": "BQARS-7018764",
+    "name": "IngestBrand",
+    "lastActivity": 1761507506768,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1761507018764,
+    "endTime": 1761507506932
+  },
+  "default:2EUFH-7614710": {
+    "id": "2EUFH-7614710",
+    "name": "GetCampaign",
+    "lastActivity": 1761507619444,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1761507614710,
+    "endTime": 1761507619973
+  },
+  "default:6V5V6-0080220": {
+    "id": "6V5V6-0080220",
+    "name": "IngestBrand",
+    "lastActivity": 1761510575294,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1761510080220,
+    "endTime": 1761510575498
+  },
+  "default:QXN5W-1643321": {
+    "id": "QXN5W-1643321",
+    "name": "IngestBrand",
+    "lastActivity": 1761512020537,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1761511643322,
+    "endTime": 1761512020561
+  },
+  "default:73PPT-2899959": {
+    "id": "73PPT-2899959",
+    "name": "IngestBrand",
+    "lastActivity": 1762213277379,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762212899959,
+    "endTime": 1762213277382
+  },
+  "default:RJBM1-2975957": {
+    "id": "RJBM1-2975957",
+    "name": "IngestBrand",
+    "lastActivity": 1762213207499,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762212975957,
+    "endTime": 1762213207502
+  },
+  "default:BHRR1-3007744": {
+    "id": "BHRR1-3007744",
+    "name": "IngestBrand",
+    "lastActivity": 1762213394654,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762213007744,
+    "endTime": 1762213394657
+  },
+  "default:WBCRM-4435208": {
+    "id": "WBCRM-4435208",
+    "name": "IngestBrand",
+    "lastActivity": 1762214531561,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1762214435208
+  },
+  "default:UMXT6-4038800": {
+    "id": "UMXT6-4038800",
+    "name": "IngestBrand",
+    "lastActivity": 1762264218976,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 1,
+      "totalSteps": 2
+    },
+    "status": "running",
+    "startTime": 1762264038800
+  },
+  "default:P1AYN-5113309": {
+    "id": "P1AYN-5113309",
+    "name": "IngestBrand",
+    "lastActivity": 1762265610394,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762265113310,
+    "endTime": 1762265610396
+  },
+  "default:ZGYSQ-5762599": {
+    "id": "ZGYSQ-5762599",
+    "name": "IngestBrand",
+    "lastActivity": 1762266164658,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762265762599,
+    "endTime": 1762266164661
+  },
+  "default:6VQ4B-6359108": {
+    "id": "6VQ4B-6359108",
+    "name": "IngestBrand",
+    "lastActivity": 1762267357632,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762266359108,
+    "endTime": 1762267357635
+  },
+  "default:GMMNT-8072587": {
+    "id": "GMMNT-8072587",
+    "name": "ExportSKUs",
+    "lastActivity": 1762268072849,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1762268072587,
+    "endTime": 1762268072854
+  },
+  "default:PGQ3E-8086318": {
+    "id": "PGQ3E-8086318",
+    "name": "IngestBrand",
+    "lastActivity": 1762269431823,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762268086318,
+    "endTime": 1762269431828
+  },
+  "default:DDHCU-4637192": {
+    "id": "DDHCU-4637192",
+    "name": "IngestBrand",
+    "lastActivity": 1762446282922,
+    "metadata": {
+      "completedSteps": 3,
+      "activeSteps": 0,
+      "totalSteps": 3
+    },
+    "status": "completed",
+    "startTime": 1762444637192,
+    "endTime": 1762446282924
+  },
+  "default:KF317-5651121": {
+    "id": "KF317-5651121",
+    "name": "GetCampaign",
+    "lastActivity": 1762445651672,
+    "metadata": {
+      "completedSteps": 1,
+      "activeSteps": 0,
+      "totalSteps": 1
+    },
+    "status": "completed",
+    "startTime": 1762445651122,
+    "endTime": 1762445651794
+  }
+}

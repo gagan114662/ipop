@@ -16,6 +16,7 @@ declare module 'motia' {
     'IngestBrand': ApiRouteHandler<{ websiteUrl: string; brandName?: string }, ApiResponse<200, { campaignId: string; message: string; status: string }>, { topic: 'process-brand'; data: { campaignId: string; websiteUrl: string; brandName: string; timestamp: string } }>
     'HealthCheck': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { status: string; message: string; services: { openai: boolean; gemini: boolean } }>, never>
     'GetCampaign': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { campaign?: unknown }> | ApiResponse<404, { error: string }>, never>
+    'ExportSKUs': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { message: string; skuCount: number; outputPath: string }> | ApiResponse<404, { error: string }>, never>
     'CampaignComplete': EventHandler<{ campaignId: string; brandName: string; productsProcessed: number; creativesGenerated: number; qualityScore: number; completedAt: string }, never>
   }
 }

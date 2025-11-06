@@ -1,0 +1,42 @@
+[
+  {
+    "name": "csrftoken",
+    "value": "e88fcb21e15aefbe96d5fee75ee848c7",
+    "domain": ".pinterest.com",
+    "path": "/",
+    "expires": 1793810268,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "sessionFunnelEventLogged",
+    "value": "1",
+    "domain": ".pinterest.com",
+    "path": "/",
+    "expires": 1793810268,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "_b",
+    "value": "\"AY75HhYiokxPkYMbJuVaxYmpf7kNSxwQYhbdioQXESqip7sm4Lwuyp489imhpBtdme8",
+    "domain": ".pinterest.com",
+    "path": "/",
+    "expires": 1793810268,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "g_state",
+    "value": "{\"i_l\":0,\"i_ll\":1762274125982,\"i_b\":\"4NPesUW5BE/B/6NxkuEfwrKPvV5ChwlfakHXfGq6e5g\"}",
+    "domain": ".pinterest.com",
+    "path": "/",
+    "expires": 1793810268,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  }
+]

@@ -7,7 +7,15 @@
     "dev": "motia dev --port 5000 --host 0.0.0.0",
     "start": "motia start",
     "build": "motia build",
-    "test": "motia test"
+    "test": "motia test",
+    "pinterest-login": "npx tsx scripts/pinterest-manual-login.ts",
+    "scrape-pinterest": "npx tsx scripts/scrape-pinterest-at-scale.ts",
+    "scrape-profile": "npx tsx scripts/scrape-entire-profile.ts",
+    "scrape-behance": "npx tsx scripts/scrape-behance-multi-category.ts",
+    "scrape-behance-best": "npx tsx scripts/scrape-behance-best.ts",
+    "classify-pinterest": "npx tsx scripts/classify-pinterest.ts",
+    "organize-by-industry": "npx tsx scripts/organize-by-industry.ts",
+    "scrape-adsoftheworld": "npx tsx scripts/scrape-adsoftheworld.ts"
   },
   "keywords": [
     "motia",
@@ -24,12 +32,17 @@
     "@google/genai": "^1.26.0",
     "axios": "^1.12.2",
     "cheerio": "^1.1.2",
+    "https-proxy-agent": "^7.0.4",
+    "lucide-react": "^0.546.0",
     "motia": "^0.6.4-beta.130",
     "openai": "^6.6.0",
+    "sharp": "^0.33.4",
+    "playwright": "^1.49.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "chromium-bidi": "^10.6.1",
     "typescript": "^5.0.0"
   },
   "engines": {

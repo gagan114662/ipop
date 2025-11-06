@@ -1,0 +1,303 @@
+{
+  "steps": {
+    "node/steps/process-brand.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/process-brand.step.js",
+      "config": {
+        "type": "event",
+        "name": "ProcessBrand",
+        "description": "Autonomous workflow that extracts SKUs, analyzes brand, researches competitors, curates award references, and generates elevated creatives",
+        "flows": [
+          "marketing-agency"
+        ],
+        "subscribes": [
+          "process-brand"
+        ],
+        "emits": [
+          "campaign-complete"
+        ],
+        "input": {
+          "type": "object",
+          "properties": {
+            "campaignId": {
+              "type": "string"
+            },
+            "websiteUrl": {
+              "type": "string"
+            },
+            "brandName": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "campaignId",
+            "websiteUrl",
+            "brandName",
+            "timestamp"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        }
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/process-brand.step.ts"
+    },
+    "node/steps/ingest-brand.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/ingest-brand.step.js",
+      "config": {
+        "type": "api",
+        "name": "IngestBrand",
+        "description": "Accepts a brand website URL and initiates the autonomous marketing agency workflow",
+        "flows": [
+          "marketing-agency"
+        ],
+        "method": "POST",
+        "path": "/api/ingest-brand",
+        "bodySchema": {
+          "type": "object",
+          "properties": {
+            "websiteUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "brandName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "websiteUrl"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "responseSchema": {
+          "200": {
+            "type": "object",
+            "properties": {
+              "campaignId": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "campaignId",
+              "message",
+              "status"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "emits": [
+          "process-brand"
+        ]
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/ingest-brand.step.ts"
+    },
+    "node/steps/health-check.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/health-check.step.js",
+      "config": {
+        "type": "api",
+        "name": "HealthCheck",
+        "description": "Health check endpoint to verify system is running",
+        "flows": [
+          "marketing-agency"
+        ],
+        "method": "GET",
+        "path": "/api/health",
+        "responseSchema": {
+          "200": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "services": {
+                "type": "object",
+                "properties": {
+                  "openai": {
+                    "type": "boolean"
+                  },
+                  "gemini": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "openai",
+                  "gemini"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "status",
+              "message",
+              "services"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "emits": []
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/health-check.step.ts"
+    },
+    "node/steps/get-campaign.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/get-campaign.step.js",
+      "config": {
+        "type": "api",
+        "name": "GetCampaign",
+        "description": "Retrieves campaign results including analysis, strategy, and generated creatives",
+        "flows": [
+          "marketing-agency"
+        ],
+        "method": "GET",
+        "path": "/api/campaign/:campaignId",
+        "responseSchema": {
+          "200": {
+            "type": "object",
+            "properties": {
+              "campaign": {}
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "404": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "error"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "emits": []
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/get-campaign.step.ts"
+    },
+    "node/steps/export-skus.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/export-skus.step.js",
+      "config": {
+        "type": "api",
+        "name": "ExportSKUs",
+        "description": "Export all extracted SKUs from a campaign to a folder",
+        "flows": [
+          "marketing-agency"
+        ],
+        "method": "GET",
+        "path": "/api/export-skus/:campaignId",
+        "responseSchema": {
+          "200": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "skuCount": {
+                "type": "number"
+              },
+              "outputPath": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message",
+              "skuCount",
+              "outputPath"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "404": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "error"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        "emits": []
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/export-skus.step.ts"
+    },
+    "node/steps/campaign-complete.step.zip": {
+      "type": "node",
+      "entrypointPath": "/steps/campaign-complete.step.js",
+      "config": {
+        "type": "event",
+        "name": "CampaignComplete",
+        "description": "Handles campaign completion notifications",
+        "flows": [
+          "marketing-agency"
+        ],
+        "subscribes": [
+          "campaign-complete"
+        ],
+        "emits": [],
+        "input": {
+          "type": "object",
+          "properties": {
+            "campaignId": {
+              "type": "string"
+            },
+            "brandName": {
+              "type": "string"
+            },
+            "productsProcessed": {
+              "type": "number"
+            },
+            "creativesGenerated": {
+              "type": "number"
+            },
+            "qualityScore": {
+              "type": "number"
+            },
+            "completedAt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "campaignId",
+            "brandName",
+            "productsProcessed",
+            "creativesGenerated",
+            "qualityScore",
+            "completedAt"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        }
+      },
+      "filePath": "/Users/gaganarora/Desktop/projects/motiacreative-development/steps/campaign-complete.step.ts"
+    }
+  },
+  "streams": {},
+  "routers": {
+    "node": "router-node.zip"
+  }
+}
