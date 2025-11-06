@@ -10,7 +10,7 @@ import time
 
 from app.core.config import settings
 from app.core.database import Database
-from app.api.v1 import auth, clients, skus, campaigns, metrics, intelligence, creatives, creative_tests
+from app.api.v1 import auth, clients, skus, campaigns, metrics, intelligence, creatives, creative_tests, creative_generation
 
 # Configure logging
 structlog.configure(
@@ -223,6 +223,12 @@ app.include_router(
     creative_tests.router,
     prefix=f"{settings.API_V1_PREFIX}/creative-tests",
     tags=["Creative Testing"]
+)
+
+app.include_router(
+    creative_generation.router,
+    prefix=f"{settings.API_V1_PREFIX}",
+    tags=["Creative Generation"]
 )
 
 # Import and include admin router
