@@ -95,6 +95,13 @@ class Settings(BaseSettings):
     STACKADAPT_API_KEY: Optional[str] = None
     ADESPRESSO_API_KEY: Optional[str] = None
     MADGICX_API_KEY: Optional[str] = None
+
+    # AI Creative Generation
+    OPENAI_API_KEY: Optional[str] = None
+    OPENAI_MODEL: str = "gpt-4-vision-preview"
+    OPENAI_IMAGE_MODEL: str = "dall-e-3"
+    CREATIVE_GENERATION_MAX_RETRIES: int = 3
+    REFERENCE_IMAGE_CACHE_TTL: int = 86400  # 24 hours
     
     # Monitoring
     SENTRY_DSN: Optional[str] = None

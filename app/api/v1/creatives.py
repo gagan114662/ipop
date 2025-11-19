@@ -19,7 +19,12 @@ from app.models.creative import (
     CreativeType,
     CreativePerformance,
     CreativeComparison,
-    CreativeComparisonResponse
+    CreativeComparisonResponse,
+    AICreativeGenerationRequest,
+    AICreativeGenerationResponse,
+    AICreativeGenerationResult,
+    ReferenceImageInfo,
+    CreativeMedia
 )
 from app.models.creative_metrics import (
     CreativeMetricsResponse,
@@ -694,3 +699,206 @@ async def bulk_update_creatives(
         "modified_count": result.modified_count,
         "creative_ids": creative_ids
     }
+
+
+@router.post("/generate-ai", response_model=AICreativeGenerationResponse)
+async def generate_ai_creative(
+    request: AICreativeGenerationRequest,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """
+    Generate award-winning creatives using AI.
+
+    This endpoint uses GPT-4 Vision and DALL-E 3 to:
+    1. Find award-winning reference images for the product category
+    2. Analyze the product image and reference images
+    3. Generate creative concepts based on best practices
+    4. Create award-winning ad creatives optimized for the platform
+
+    The generated creatives are automatically saved to the database.
+    """
+    from app.services.reference_image_finder import ReferenceImageFinder
+    from app.services.ai_creative_generator import AICreativeGenerator
+
+    client_id = current_user["client_id"]
+
+    try:
+        logger.info(
+            "ai_creative_generation_request",
+            client_id=client_id,
+            category=request.category,
+            platform=request.platform.value,
+            variants=request.generate_variants
+        )
+
+        # Initialize services
+        reference_finder = ReferenceImageFinder(db)
+        ai_generator = AICreativeGenerator(reference_finder)
+
+        # Prepare additional context
+        additional_context = {}
+        if request.brand_name:
+            additional_context["brand_name"] = request.brand_name
+        if request.brand_guidelines:
+            additional_context["brand_guidelines"] = request.brand_guidelines
+        if request.key_message:
+            additional_context["key_message"] = request.key_message
+        if request.target_audience:
+            additional_context["target_audience"] = request.target_audience
+        if request.cta:
+            additional_context["cta"] = request.cta.value
+
+        # Generate creatives
+        if request.generate_variants > 1:
+            generation_results = await ai_generator.generate_multiple_variants(
+                product_image_url=request.product_image_url,
+                category=request.category,
+                platform=request.platform.value,
+                count=request.generate_variants,
+                additional_context=additional_context if additional_context else None
+            )
+        else:
+            single_result = await ai_generator.generate_award_winning_creative(
+                product_image_url=request.product_image_url,
+                category=request.category,
+                platform=request.platform.value,
+                additional_context=additional_context if additional_context else None
+            )
+            generation_results = [single_result]
+
+        # Save generated creatives to database
+        created_creative_ids = []
+        results = []
+
+        for idx, gen_result in enumerate(generation_results, 1):
+            # Create creative ID
+            prefix = request.creative_id_prefix or "ai_gen"
+            creative_id = f"{prefix}_{request.category}_{request.platform.value}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{idx}"
+
+            # Build creative name
+            creative_name = f"AI Generated - {request.category.title()} - Variant {idx}"
+            if request.brand_name:
+                creative_name = f"{request.brand_name} - {creative_name}"
+
+            # Create media asset
+            media_asset = CreativeMedia(
+                media_url=gen_result["generated_image_url"],
+                media_type="image/png",
+                width=1024,
+                height=1024
+            )
+
+            # Create creative document
+            creative = CreativeInDB(
+                client_id=client_id,
+                creative_id=creative_id,
+                name=creative_name,
+                creative_type=CreativeType.IMAGE,
+                platform=request.platform,
+                headline=request.key_message[:200] if request.key_message else None,
+                primary_text=gen_result.get("concept", {}).get("concept_text", "")[:2000],
+                call_to_action=request.cta if request.cta else CallToAction.SHOP_NOW,
+                media_assets=[media_asset],
+                status=CreativeStatus.DRAFT,
+                tags=[
+                    "ai_generated",
+                    request.category,
+                    request.platform.value,
+                    "award_winning_style"
+                ],
+                metadata={
+                    "generation_method": "ai",
+                    "product_image_url": request.product_image_url,
+                    "category": request.category,
+                    "generation_timestamp": gen_result["metadata"]["generated_at"],
+                    "openai_model": gen_result["metadata"]["model"],
+                    "revised_prompt": gen_result["revised_prompt"],
+                    "analysis": gen_result["analysis"],
+                    "concept": gen_result["concept"],
+                    "reference_images": [
+                        {
+                            "url": ref["url"],
+                            "title": ref["title"],
+                            "source": ref["source"]
+                        }
+                        for ref in gen_result["reference_images"]
+                    ]
+                }
+            )
+
+            # Add to campaign if specified
+            if request.campaign_id:
+                creative.campaign_ids = [request.campaign_id]
+
+            # Save to database
+            result = await db.creatives.insert_one(
+                creative.dict(by_alias=True, exclude={"id"})
+            )
+            creative.id = result.inserted_id
+            created_creative_ids.append(creative_id)
+
+            logger.info(
+                "ai_creative_saved",
+                client_id=client_id,
+                creative_id=creative_id,
+                db_id=str(result.inserted_id)
+            )
+
+            # Build response result
+            results.append(AICreativeGenerationResult(
+                generated_image_url=gen_result["generated_image_url"],
+                revised_prompt=gen_result["revised_prompt"],
+                concept=gen_result["concept"],
+                analysis=gen_result["analysis"],
+                reference_images=[
+                    ReferenceImageInfo(
+                        url=ref["url"],
+                        title=ref["title"],
+                        source=ref["source"]
+                    )
+                    for ref in gen_result["reference_images"]
+                ],
+                metadata=gen_result["metadata"]
+            ))
+
+        # Clean up
+        await reference_finder.close()
+        await ai_generator.close()
+
+        logger.info(
+            "ai_creative_generation_completed",
+            client_id=client_id,
+            total_generated=len(results),
+            creative_ids=created_creative_ids
+        )
+
+        return AICreativeGenerationResponse(
+            status="success",
+            results=results,
+            creatives_created=created_creative_ids,
+            total_generated=len(results)
+        )
+
+    except ValueError as e:
+        logger.error(
+            "ai_creative_generation_validation_error",
+            client_id=client_id,
+            error=str(e)
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(
+            "ai_creative_generation_error",
+            client_id=client_id,
+            error=str(e),
+            exc_info=True
+        )
+        return AICreativeGenerationResponse(
+            status="error",
+            error=str(e),
+            total_generated=0
+        )

@@ -234,3 +234,51 @@ class CreativeComparisonResponse(BaseModel):
     best_performer: str
     recommendation: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+
+class AICreativeGenerationRequest(BaseModel):
+    """Request for AI-powered creative generation."""
+    product_image_url: str = Field(..., description="URL to product image")
+    category: str = Field(..., description="Product category (e.g., fashion, tech, food)")
+    platform: Platform = Field(..., description="Target advertising platform")
+
+    # Optional context
+    brand_name: Optional[str] = Field(None, description="Brand name")
+    brand_guidelines: Optional[str] = Field(None, description="Brand guidelines and style")
+    key_message: Optional[str] = Field(None, description="Key marketing message")
+    target_audience: Optional[str] = Field(None, description="Target audience description")
+    cta: Optional[CallToAction] = Field(CallToAction.SHOP_NOW, description="Call to action")
+
+    # Generation settings
+    generate_variants: int = Field(1, ge=1, le=5, description="Number of variants to generate")
+
+    # Creative details
+    creative_id_prefix: Optional[str] = Field(None, description="Prefix for generated creative IDs")
+    campaign_id: Optional[str] = Field(None, description="Associate with campaign")
+
+
+class ReferenceImageInfo(BaseModel):
+    """Information about a reference image used in generation."""
+    url: str
+    title: str
+    source: str
+
+
+class AICreativeGenerationResult(BaseModel):
+    """Result of AI creative generation."""
+    generated_image_url: str = Field(..., description="URL to generated creative")
+    revised_prompt: str = Field(..., description="DALL-E revised prompt")
+    concept: Dict[str, Any] = Field(..., description="Creative concept details")
+    analysis: Dict[str, Any] = Field(..., description="Image analysis details")
+    reference_images: List[ReferenceImageInfo] = Field(..., description="Reference images used")
+    metadata: Dict[str, Any] = Field(..., description="Generation metadata")
+
+
+class AICreativeGenerationResponse(BaseModel):
+    """Response for AI creative generation."""
+    status: str = Field(..., description="success or error")
+    results: List[AICreativeGenerationResult] = Field(default_factory=list)
+    creatives_created: List[str] = Field(default_factory=list, description="Created creative IDs")
+    total_generated: int = Field(0, description="Number of variants generated")
+    error: Optional[str] = Field(None, description="Error message if failed")
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
